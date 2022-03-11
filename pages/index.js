@@ -21,14 +21,15 @@ export default function Home({session, newsApi}) {
 export async function getServerSideProps (context) {
   const session = await getSession({ req: context.req });
 
-  // const newsApi = axios.get('https://newsapi.org/v2/everything?q=tesla&from=2022-02-10&sortBy=publishedAt&apiKey=71570a86e3e944db95e7b2616915be4b')
-  // .then((response)=>{
-  //   console.log(response)
-  // })
+  const newsApi = await axios.get('https://newsapi.org/v2/everything?q=tesla&from=2022-02-10&sortBy=publishedAt&apiKey=71570a86e3e944db95e7b2616915be4b')
+  .then((response) => response.data.articles[0])
+
+  console.log("newsApi are bla balb alsdaldasjkda", newsApi)
 
   return {
     props: {
       session: await getSession(context),
+      newsApi: newsApi
     },
   };
 //   if (!session) {
