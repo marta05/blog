@@ -28,7 +28,7 @@ const MyApp = (props) => {
         <Toolbar>
           <Container
               maxWidth="lg"
-              sx={{ display: `flex`, flexDirection: 'column'}}
+              sx={{ display: `flex`, flexDirection: 'column', minHeight: '85vh'}}
             >
           <Component {...pageProps} />
         </Container>

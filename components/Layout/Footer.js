@@ -14,7 +14,7 @@ const Footer = () => {
         <BottomNavigation
         showLabels
         value={value}
-        sx={{ display: `flex`, justifyContent: `center`}}
+        sx={{ display: `flex`, justifyContent: `center`, marginBottom: '0'}}
         onChange={(event, newValue) => {
             setValue(newValue);
         }}
