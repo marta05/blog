@@ -21,7 +21,7 @@ const ReviewShanen = ({
         avatar={
           <Avatar
             sx={{ bgcolor: orange[500] }}
-            aria-label="shanen profile letter"
+            aria-label="profile letter"
           >
             {initials}
           </Avatar>
