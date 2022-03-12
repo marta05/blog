@@ -16,7 +16,7 @@ const ReviewShanen = ({
     }
 ) => {
   return (
-    <Card sx={{ maxWidth: 345, minWidth: 300, marginTop: '2%' }}>
+    <Card sx={{ maxWidth: 345, minWidth: 300, marginTop: '2%', height:'265px' }}>
       <CardHeader
         avatar={
           <Avatar
