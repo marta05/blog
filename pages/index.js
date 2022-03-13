@@ -1,15 +1,19 @@
-import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-// import db from '../lib/db'
+import db from '../lib/db'
 
 import { getSession, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/dist/client/router";
 import Review from '../components/Card/Review'
-import { Toolbar, Typography, ThemeProvider} from '@mui/material';
+import { Toolbar, Typography, ThemeProvider, Button} from '@mui/material';
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
+import Image from 'next/image'
+import Ninja from '../public/ninja1.png'
 
-export default function Home() {
+
+export default function Home({session}) {
+
+  console.log(session)
 
 let theme = createTheme();
 theme = responsiveFontSizes(theme);
@@ -18,7 +22,11 @@ theme = responsiveFontSizes(theme);
     <div>
       <Toolbar sx={{ display: `flex`, flexDirection:'column', alignContent:'center', justifyContent:'center'}}>
         <ThemeProvider theme={theme}>
-          <Typography variant="h3" color="info.dark" sx={{ fontWeight: 700, marginTop:'3%', textAlign:'center' }}>Welcome to BlogoMania!</Typography>
+          <Typography variant="h3" color="info.dark" sx={{ fontWeight: 700, marginTop:'1.5%', marginBottom: '2%', textAlign:'center' }}>Welcome to BlogoNinja!</Typography>
+          <Image src={Ninja} alt="ninja" width="200" height="120" />
+          <Typography variant="h5" color="info.dark" sx={{ marginTop:'3%', marginBottom:'1%', textAlign:'center' }}><Button variant="contained" size="large">Sign in</Button> OR <Button variant="contained" size="large">Register</Button></Typography>
+          <Typography variant="p" color="info.dark" sx={{ fontWeight: 400, marginTop:'2%', marginBottom: '1%', textAlign:'center' }}>Join our community of bloggers, share your thoughts and let the creativity take over!</Typography>
+
         </ThemeProvider>
       </Toolbar>
       <Toolbar sx={{ display: `flex`, width: '100%', justifyContent: "space-around", flexWrap:'wrap'}}>
@@ -46,16 +54,20 @@ theme = responsiveFontSizes(theme);
 }
 
 
-// export async function getServerSideProps (context) {
+export async function getServerSideProps (context) {
 
-//   const session = await getSession({ req: context.req });
+  const session = await getSession({ req: context.req });
 
-//   const posts = await db.query('SELECT * FROM post').then((results)=> results.rows)
+  const data = await db.query(`SELECT * FROM "public"."user" WHERE email='marta@test.com'`)
+  .then((res)=>res.rows)
+  console.log(data)
 
-//   return {
-//     props: {
-//       session: await getSession(context),
-//       posts
-//     },
-//   };
-// }
+  // const posts = await db.query('SELECT * FROM post').then((results)=> results.rows)
+
+  return {
+    props: {
+      session: await getSession(context),
+      // posts
+    },
+  };
+}

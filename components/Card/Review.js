@@ -16,11 +16,12 @@ const ReviewShanen = ({
     }
 ) => {
   return (
-    <Card sx={{ maxWidth: 345, minWidth: 300, marginTop: '2%', height:'265px' }}>
+    <Card sx={{ maxWidth: 345, minWidth: 300, marginTop: '2%', height:'240px' }}>
       <CardHeader
+      sx={{paddingBottom:'5px'}}
         avatar={
           <Avatar
-            sx={{ bgcolor: orange[500] }}
+            sx={{ bgcolor: orange[500]}}
             aria-label="profile letter"
           >
             {initials}
