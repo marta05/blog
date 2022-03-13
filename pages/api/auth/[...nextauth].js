@@ -75,6 +75,7 @@ export default NextAuth({
       return token;
     },
     session: ({ session, token }) => {
+
       if (token) {
         session.id = token.id;
       }
