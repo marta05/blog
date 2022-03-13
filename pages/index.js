@@ -1,15 +1,13 @@
 import styles from '../styles/Home.module.css'
-import db from '../lib/db'
 
 import { getSession, signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/dist/client/router";
 import Review from '../components/Card/Review'
 import { Toolbar, Typography, ThemeProvider, Button} from '@mui/material';
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
+import Router from 'next/router';
 
 import Image from 'next/image'
 import Ninja from '../public/ninja1.png'
-
 
 export default function Home({session}) {
 
@@ -57,17 +55,11 @@ theme = responsiveFontSizes(theme);
 export async function getServerSideProps (context) {
 
   const session = await getSession({ req: context.req });
-
-  const data = await db.query(`SELECT * FROM "public"."user" WHERE email='marta@test.com'`)
-  .then((res)=>res.rows)
-  console.log(data)
-
-  // const posts = await db.query('SELECT * FROM post').then((results)=> results.rows)
+  console.log(context.req)
 
   return {
     props: {
       session: await getSession(context),
-      // posts
     },
   };
 }

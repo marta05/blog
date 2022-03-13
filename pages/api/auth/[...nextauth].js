@@ -3,6 +3,7 @@ import CredentialProvider from "next-auth/providers/credentials";
 import axios from 'axios'
 import db from '../../../lib/db'
 
+
 export default NextAuth({
   providers: [
     CredentialProvider({
@@ -15,18 +16,28 @@ export default NextAuth({
         },
         password: { label: "Password", type: "password" },
       },
-      authorize: (credentials) => {
+      authorize: async (credentials) => {
         // add the database logic here
+        const dbEmail = credentials.email
+        console.log(dbEmail)
+        
+        // const dbUser = await db.query(`SELECT * FROM "user" WHERE email = ${dbEmail}`).then((results)=> results.rows[0])
+        const dbUser = await db.query(`SELECT * FROM "user" WHERE email = '${dbEmail}'`).then((results)=> results.rows[0])
+        console.log(dbUser)
 
-        const user = db.query('SELECT * FROM "user" WHERE email = ?', [credentials.email]).then((res)=> res.rows)
-        console.log(user)
-
-      if(user.length === 0){
-          res.status(404).send(`The user with the email ${email} doesn't exist`)
-      } else {
-        credentials.password === user[0].hashed_password
-      }
-
+        if(dbUser.length === 0){
+          res.status(404).send(`The user with the email doesn't exist`)
+      } else if(
+        credentials.password === dbUser.hashed_password
+       ) {
+        return {
+          id: dbUser.id,
+          name: "name",
+          email: dbUser.email,
+          isAdmin: dbUser.isAdmin
+        }
+      } 
+          
         // if (
           
         //   credentials.email === "john" &&
@@ -49,9 +60,6 @@ export default NextAuth({
         //         isAdmin: "false",
         //     }
         // }
-
-        // login failed
-        return null;
       },
     }),
   ],
