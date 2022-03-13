@@ -7,12 +7,12 @@ import db from '../../../lib/db'
 export default NextAuth({
   providers: [
     CredentialProvider({
-      name: "credentials",
+      name: "your credentials",
       credentials: {
         email: {
           label: "Email",
           type: "text",
-          placeholder: "johndoe@test.com",
+          placeholder: "example@test.com",
         },
         password: { label: "Password", type: "password" },
       },
@@ -25,18 +25,20 @@ export default NextAuth({
         const dbUser = await db.query(`SELECT * FROM "user" WHERE email = '${dbEmail}'`).then((results)=> results.rows[0])
         console.log(dbUser)
 
-        if(dbUser.length === 0){
-          res.status(404).send(`The user with the email doesn't exist`)
-      } else if(
-        credentials.password === dbUser.hashed_password
-       ) {
-        return {
-          id: dbUser.id,
-          name: "name",
-          email: dbUser.email,
-          isAdmin: dbUser.isAdmin
+          if(dbUser.length === 0){
+           console.log("The user with the email doesn't exist")
+        } else if(
+          credentials.password === dbUser.hashed_password
+         ) {
+          return {
+            id: dbUser.id,
+            // name: "name",
+            email: dbUser.email,
+            admin: dbUser.admin
+          }
+        } else {
+          return null
         }
-      } 
           
         // if (
           
@@ -76,7 +78,7 @@ export default NextAuth({
       if (token) {
         session.id = token.id;
       }
-
+      
       return session;
     },
   },
