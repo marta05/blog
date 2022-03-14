@@ -22,7 +22,7 @@ const validateInput = (name, email, password, confirmPassword) => {
     const { error } = Joi.object({
         name: Joi.string().max(255).required(),
         email: Joi.string().email().max(255).required(),
-        password: Joi.string().min(8).max(50).required(),
+        password: Joi.string().min(4).max(50).required(),
         confirmPassword: Joi.string().required().valid(Joi.ref('password')),
     }).validate({ name, email, password, confirmPassword}, { abortEarly: false });
     return error

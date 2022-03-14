@@ -40,6 +40,13 @@ export default NextAuth({
       },
     }),
   ],
+  session: {
+    jwt: true,
+  },
+  jwt: {
+    secret: "test",
+    encryption: true,
+  },
   callbacks: {
     jwt: ({ token, user}) => {
       // first time jwt callback is run, user object is available
@@ -50,17 +57,11 @@ export default NextAuth({
       return token;
     },
     session: ({ session, token }) => {
-
-      if (token) {
-        session.id = token.id;
-      }
-      
+      session.user.id = token.id;      
       return session;
     },
   },
-  secret: "test",
-  jwt: {
-    secret: "test",
-    encryption: true,
-  },
+  // pages: {
+  //   signIn: "http://localhost:3000/signin",
+  // },
 });

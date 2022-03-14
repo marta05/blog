@@ -14,6 +14,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
+  minWidth: 320,
   width: 600,
   bgcolor: 'background.paper',
   border: '2px solid #000',
@@ -24,7 +25,7 @@ const style = {
 const theme = createTheme()
 
 
-export default function Register(props) {
+export default function SignIn(props) {
 
   const [admin, setAdmin] = useState("")
   const [name, setName] = useState('')
@@ -38,12 +39,13 @@ export default function Register(props) {
 
   const handleSubmission = async () => {
     await createUser()
-    await router.push('/posts')
+    await alert('User created!, please sign in on the next page')
+    await router.push('/api/auth/signin')
   }
 
   const createUser = async () => {
     try{
-      axios.post('/api/user', {
+      axios.post('/api/auth/signup', {
         admin: admin,
         name: name,
         email: email,
@@ -105,6 +107,7 @@ export default function Register(props) {
                           setName(event.target.value)
                           console.log(name)
                         }}
+                        inputProps={{ maxLength: 12 }}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -120,8 +123,9 @@ export default function Register(props) {
                         }}
                       />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={6}>
                       <TextField
+                      helperText="4 characters minimum"
                         required
                         fullWidth
                         label="Password"
@@ -132,9 +136,10 @@ export default function Register(props) {
                         onChange={(event)=>{
                           setPassword(event.target.value)
                         }}
+   
                       />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={6}>
                       <TextField
                         required
                         fullWidth
@@ -201,21 +206,9 @@ export default function Register(props) {
                   >
                     Sign Up
                   </Button>
-                  <Grid container justifyContent="flex-end">
-                    <Grid item>
-                      <Link
-                        href="#"
-                        variant="body2"
-                        onClick={() => {
-                          signIn('CredentialProvider', {
-                            callbackUrl: '/posts',
-                          })
-                        }}
-                      >
-                        Already have an account? Sign in
-                      </Link>
-                    </Grid>
-                  </Grid>
+                  <Typography variant="body2" color="textSecondary" sx={{marginTop: '1%', color:'red', textAlign: 'center'}}>
+                        After successfull registration, you will be redirected to the login page
+                  </Typography>
                 </Box>
               </Box>
             </Container>

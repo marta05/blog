@@ -49,9 +49,8 @@ export default function Home({ session }) {
             <Button
               variant="contained"
               size="large"
-              onClick={() => {
-                signIn('CredentialProvider', { callbackUrl: '/posts' })
-              }}
+              onClick={() =>
+                 {signIn('CredentialProvider', {callbackUrl: 'http://localhost:3000/posts'} )}}
             >
               Sign in
             </Button>

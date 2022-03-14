@@ -1,10 +1,10 @@
 // import { getSession } from 'next-auth/client'
-import db from '../../lib/db'
+import db from '../../../lib/db'
 const {
   hashPassword,
   verifyPassword,
   validateInput,
-} = require('../../helpers/users')
+} = require('../../../helpers/users')
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
