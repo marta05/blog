@@ -17,14 +17,12 @@ export default NextAuth({
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        // add the database logic here
         const dbEmail = credentials.email
-        console.log(dbEmail)
-        
-        // const dbUser = await db.query(`SELECT * FROM "user" WHERE email = ${dbEmail}`).then((results)=> results.rows[0])
-        const dbUser = await db.query(`SELECT * FROM "user" WHERE email = '${dbEmail}'`).then((results)=> results.rows[0])
-        console.log(dbUser)
 
+        // the database lookup for the user
+        const dbUser = await db.query(`SELECT * FROM "user" WHERE email = '${dbEmail}'`).then((results)=> results.rows[0])
+
+        //verifying if the user exists and if the password input matches password from the db
           if(dbUser.length === 0){
            console.log("The user with the email doesn't exist")
         } else if(
@@ -39,29 +37,6 @@ export default NextAuth({
         } else {
           return null
         }
-          
-        // if (
-          
-        //   credentials.email === "john" &&
-        //   credentials.password === "test"
-        // ) {
-        //   return {
-        //     id: 1,
-        //     name: "John",
-        //     email: "johndoe@test.com",
-        //     isAdmin: "true",
-        //   };
-        // } else if (
-        //     credentials.email === "marta" &&
-        //     credentials.password === "test"
-        // ) {
-        //     return {
-        //         id: 2,
-        //         name: "Marta",
-        //         email: "marta@test.com",
-        //         isAdmin: "false",
-        //     }
-        // }
       },
     }),
   ],
