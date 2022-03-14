@@ -1,15 +1,19 @@
-import styles from '../styles/Home.module.css'
-
 import { getSession, signIn, signOut, useSession } from 'next-auth/react'
 import Review from '../components/Card/Review'
 import { Toolbar, Typography, ThemeProvider, Button } from '@mui/material'
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 import Router from 'next/router'
+import {useState} from 'react'
+import Register from '../components/Registration/Registration'
 
 import Image from 'next/image'
 import Ninja from '../public/ninja1.png'
 
 export default function Home({ session }) {
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {setOpen(true)}; //opens modal
+
   console.log(session)
 
   let theme = createTheme()
@@ -45,16 +49,15 @@ export default function Home({ session }) {
             <Button
               variant="contained"
               size="large"
-              onClick={() => {
-                signIn('CredentialProvider', { callbackUrl: '/posts' })
-              }}
+              onClick={() =>
+                 {signIn('CredentialProvider', {callbackUrl: 'http://localhost:3000/posts'} )}}
             >
               Sign in
             </Button>
             <Typography variant="h5" sx={{paddingLeft: '2%', paddingRight: '2%'}}>
             OR
             </Typography>
-            <Button variant="contained" size="large">
+            <Button variant="contained" size="large" onClick={()=>{handleOpen()}}>
               Register
             </Button>
           </Toolbar>
@@ -106,17 +109,17 @@ export default function Home({ session }) {
           value={4.5}
         />
       </Toolbar>
+      <Register open={open} setOpen={setOpen}/>
     </div>
   )
 }
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req })
-  console.log(context.req)
-
+  
   return {
     props: {
-      session: await getSession(context),
+      session: session
     },
   }
 }
