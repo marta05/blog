@@ -3,6 +3,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
+import Router from 'next/router'
 
 import Avatar from '@mui/material/Avatar'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -14,6 +15,8 @@ import Grid from '@mui/material/Grid'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Container from '@mui/material/Container'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
+import Select from '@mui/material/Select'
+import { InputLabel, FormControl, MenuItem } from '@mui/material'
 
 import { getSession, signIn, signOut, useSession } from 'next-auth/react'
 
@@ -29,26 +32,16 @@ const style = {
   p: 4,
 }
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {'Copyright © '}
-      <Link color="inherit">BlogoNinja</Link> {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  )
-}
-
 const theme = createTheme()
 
 export default function Register(props) {
+  const [admin, setAdmin] = React.useState('')
   const { open, setOpen } = props
   const handleClose = () => setOpen(false)
+
+  const handleChange = (event) => {
+    setAdmin(event.target.value)
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -93,7 +86,7 @@ export default function Register(props) {
                   sx={{ mt: 3 }}
                 >
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12}>
                       <TextField
                         autoComplete="given-name"
                         name="firstName"
@@ -102,16 +95,6 @@ export default function Register(props) {
                         id="firstName"
                         label="First Name"
                         autoFocus
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        required
-                        fullWidth
-                        id="lastName"
-                        label="Last Name"
-                        name="lastName"
-                        autoComplete="family-name"
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -135,25 +118,63 @@ export default function Register(props) {
                         autoComplete="new-password"
                       />
                     </Grid>
+                    <Grid item xs={12}>
+                      <FormControl fullWidth>
+                        <InputLabel id="select-admin-role">
+                          Select User Role
+                        </InputLabel>
+                        <Select
+                          labelId="select-admin-role"
+                          id="select-admin-role"
+                          value={admin}
+                          onChange={handleChange}
+                          label="Select User Role"
+                        >
+                          <MenuItem value="">
+                          </MenuItem>
+                          <MenuItem>Admin User</MenuItem>
+                          <MenuItem>Standard User</MenuItem>
+                        </Select>
+                      </FormControl>
+                      <Typography variant="body2" color="textSecondary">
+                        *Standard user can view the posts of others
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                        *Admin user can view, add, edit, delete the posts
+                        </Typography>
+                      {/* add selection login if the user wants to be an admin */}
+                    </Grid>
                   </Grid>
                   <Button
                     type="submit"
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
+                    onClick={() => {
+                      // 1. add to db new user
+                      // 2. go to posts page if successful
+                      Router.push('/posts')
+                    }}
                   >
                     Sign Up
                   </Button>
                   <Grid container justifyContent="flex-end">
                     <Grid item>
-                      <Link href="#" variant="body2" onClick={()=>{signIn('CredentialProvider', { callbackUrl: '/posts' })}}>
+                      <Link
+                        href="#"
+                        variant="body2"
+                        onClick={() => {
+                          signIn('CredentialProvider', {
+                            callbackUrl: '/posts',
+                          })
+                        }}
+                      >
                         Already have an account? Sign in
                       </Link>
                     </Grid>
                   </Grid>
                 </Box>
               </Box>
-              <Copyright sx={{ mt: 5 }} />
             </Container>
           </ThemeProvider>
         </Box>
