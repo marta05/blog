@@ -1,22 +1,11 @@
-import * as React from 'react'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import Modal from '@mui/material/Modal'
-import Router from 'next/router'
+import {useState} from 'react';
+import axios from 'axios';
+import router from "next/router";
 
-import Avatar from '@mui/material/Avatar'
-import CssBaseline from '@mui/material/CssBaseline'
-import TextField from '@mui/material/TextField'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Checkbox from '@mui/material/Checkbox'
-import Link from '@mui/material/Link'
-import Grid from '@mui/material/Grid'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import Container from '@mui/material/Container'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import Select from '@mui/material/Select'
-import { InputLabel, FormControl, MenuItem } from '@mui/material'
+import { InputLabel, FormControl, MenuItem, Box, Button, Typography, Modal, Avatar, CssBaseline,
+  TextField, Link, Grid, Container, Select } from '@mui/material'
 
 import { getSession, signIn, signOut, useSession } from 'next-auth/react'
 
@@ -34,23 +23,40 @@ const style = {
 
 const theme = createTheme()
 
+
 export default function Register(props) {
-  const [admin, setAdmin] = React.useState('')
+
+  const [admin, setAdmin] = useState("")
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [userRole, setUserRole] = useState('')
+
   const { open, setOpen } = props
   const handleClose = () => setOpen(false)
 
-  const handleChange = (event) => {
-    setAdmin(event.target.value)
+  const handleSubmission = async () => {
+    await createUser()
+    await router.push('/posts')
   }
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    })
+  const createUser = async () => {
+    try{
+      axios.post('/api/user', {
+        admin: admin,
+        name: name,
+        email: email,
+        password: password,
+        confirmPassword: confirmPassword
+      } )
+      .then((response) => {
+        console.log(response)
+      }
+    )
+    } catch(err){
+      console.log(err)
+    }
   }
 
   return (
@@ -82,19 +88,23 @@ export default function Register(props) {
                 <Box
                   component="form"
                   noValidate
-                  onSubmit={handleSubmit}
+                  // onSubmit={handleSubmit}
                   sx={{ mt: 3 }}
                 >
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
                       <TextField
                         autoComplete="given-name"
-                        name="firstName"
                         required
                         fullWidth
-                        id="firstName"
+                        id="name"
                         label="First Name"
                         autoFocus
+                        value={name}
+                        onChange={(event)=>{
+                          setName(event.target.value)
+                          console.log(name)
+                        }}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -103,37 +113,72 @@ export default function Register(props) {
                         fullWidth
                         id="email"
                         label="Email Address"
-                        name="email"
                         autoComplete="email"
+                        value={email}
+                        onChange={(event)=>{
+                          setEmail(event.target.value)
+                        }}
                       />
                     </Grid>
                     <Grid item xs={12}>
                       <TextField
                         required
                         fullWidth
-                        name="password"
                         label="Password"
                         type="password"
                         id="password"
                         autoComplete="new-password"
+                        value={password}
+                        onChange={(event)=>{
+                          setPassword(event.target.value)
+                        }}
                       />
                     </Grid>
                     <Grid item xs={12}>
-                      <FormControl fullWidth>
-                        <InputLabel id="select-admin-role">
+                      <TextField
+                        required
+                        fullWidth
+                        label="Confirm Password"
+                        type="password"
+                        id="confirmPassword"
+                        autoComplete="new-password"
+                        value={confirmPassword}
+                        onChange={(event)=>{
+                          setConfirmPassword(event.target.value)
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <FormControl fullWidth sx={{marginBottom:'2%'}}>
+                        <InputLabel id="select-admin-role" required>
                           Select User Role
                         </InputLabel>
                         <Select
+                          // label="Select User Role"
+                          sx={{marginBottom:'2%'}}  
+                          fullWidth
                           labelId="select-admin-role"
                           id="select-admin-role"
                           value={admin}
-                          onChange={handleChange}
+                          onChange={(event)=>{
+                            setAdmin(event.target.value)
+                          }}
+                          placeholder="Select User Role"
                           label="Select User Role"
                         >
-                          <MenuItem value="">
-                          </MenuItem>
-                          <MenuItem>Admin User</MenuItem>
-                          <MenuItem>Standard User</MenuItem>
+                          <MenuItem
+                            value={'TRUE'}
+                            onSelect={()=>{
+                              setAdmin(TRUE);
+                            }}
+                          >Admin</MenuItem>
+                          <MenuItem
+                            value={'FALSE'}
+                            onSelect={()=>{
+                              setAdmin(FALSE);
+                            }}
+                          >
+                            Standard</MenuItem>
                         </Select>
                       </FormControl>
                       <Typography variant="body2" color="textSecondary">
@@ -146,14 +191,12 @@ export default function Register(props) {
                     </Grid>
                   </Grid>
                   <Button
-                    type="submit"
+                    // type="submit"
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
                     onClick={() => {
-                      // 1. add to db new user
-                      // 2. go to posts page if successful
-                      Router.push('/posts')
+                      handleSubmission()
                     }}
                   >
                     Sign Up

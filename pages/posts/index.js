@@ -1,9 +1,6 @@
-// import Image from 'next/image'
-// import styles from '../styles/Home.module.css'
 import db from '../../lib/db'
 
 import { getSession, signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/dist/client/router";
 
 export default function Posts({session, posts}) {
   console.log(session)

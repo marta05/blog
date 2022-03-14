@@ -1,5 +1,3 @@
-import styles from '../styles/Home.module.css'
-
 import { getSession, signIn, signOut, useSession } from 'next-auth/react'
 import Review from '../components/Card/Review'
 import { Toolbar, Typography, ThemeProvider, Button } from '@mui/material'
@@ -119,11 +117,10 @@ export default function Home({ session }) {
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req })
-  console.log(context.req)
-
+  
   return {
     props: {
-      session: await getSession(context),
+      session: session
     },
   }
 }

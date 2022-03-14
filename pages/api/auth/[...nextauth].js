@@ -30,7 +30,7 @@ export default NextAuth({
          ) {
           return {
             id: dbUser.id,
-            // name: "name",
+            name: dbUser.name,
             email: dbUser.email,
             admin: dbUser.admin
           }
