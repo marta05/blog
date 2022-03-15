@@ -1,5 +1,7 @@
 import db from '../../lib/db'
 import { useState, useEffect } from 'react'
+import axios from 'axios'
+import router from 'next/router'
 
 import { getSession, signIn, signOut, useSession } from 'next-auth/react'
 import {
@@ -13,7 +15,6 @@ import {
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 
 import Post from '../../components/Card/Post'
-import Router from 'next/router'
 
 
 export default function Posts({ session, postUser, sessionUser }) {
@@ -31,9 +32,23 @@ export default function Posts({ session, postUser, sessionUser }) {
     return `${month}/${day}/${year}`
   }
 
-  const handleClick = async () => {
-    Router.push('/posts/edit')
-  }
+  // const handleClick = async () => {
+  //   Router.push('/posts/edit')
+  // }
+
+      const handleSubmit = () => {
+        axios.post('/api/edit',
+        {
+            title: '',
+            content: '',
+            userId: session.user.id,
+            dateCreated: new Date(),        
+        })
+        .then(function (response) {
+            router.push(`/posts/edit/${response.data.id}`)
+        }
+        )
+    }
   
   let theme = createTheme()
   theme = responsiveFontSizes(theme)
@@ -132,7 +147,7 @@ export default function Posts({ session, postUser, sessionUser }) {
               </Typography>
               {sessionUser.admin ? (
                 <Button variant="contained" color="success"
-                  onClick={() => handleClick()}
+                  onClick={() => handleSubmit()}
                 >
                   + Add New Post
                 </Button>

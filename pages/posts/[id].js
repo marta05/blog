@@ -45,6 +45,22 @@ export default function PostId({ session, postId, signlePostUser }) {
       console.log(err)
     }
   }
+
+  // const editPost = async () => {
+  //   try{
+  //     await axios.put(`/api/post`, {
+  //       data: { postId: postId }
+  //     })
+  //     Router.push('/posts/edit')
+  //   } catch(err) {
+  //     console.log(err)
+  //   }
+  // }
+
+  const handleEdit = async () => {
+    // await editPost()
+    Router.push('/posts/edit/[id]', `/posts/edit/${postId}`)
+  }
     
 
   //in return below are covered 3 cases, 

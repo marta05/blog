@@ -34,6 +34,21 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'PUT') {
+    const { title, content, postId } = req.body
+
+    try {
+      const response = await db
+        .query(
+          `UPDATE "post" SET title = $1, content = $2 WHERE id = $3 RETURNING id, title, content, user_id, date_created`,
+          [title, content, postId],
+        )
+        .then((results) => results.rows[0])
+        console.log(response)
+      res.status(200).json(response)
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ error: 'Server error' })
+    }
   }
 
   if (req.method === 'DELETE') {

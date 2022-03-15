@@ -1,31 +1,28 @@
 import {useState} from 'react';
 import { getSession } from 'next-auth/react';
 import axios from 'axios';
+import db from '../../../lib/db';
 
 import { Box, TextField, Toolbar, Button } from '@mui/material';
 import router from 'next/router';
 
-export default function Edit({session}) {
+export default function Edit({session, postId, signlePostUser}) {
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
-    const handleSubmit = async () => {
-        await createPost()
-        // router.push('/posts')
-    }
-
-    const createPost = () => {
-        axios.post('/api/edit',
+    
+    const handleSubmit = () => {
+        axios.put('/api/edit',
         {
-          title: title,
-          content: content,
-          userId: session.user.id,
-          dateCreated: new Date(),        
+            title: title,
+            content: content,
+            postId: postId,
         })
         .then(function (response) {
+            console.log(response)
             router.push('/posts/[id]', `/posts/${response.data.id}`)
-            }
+        }
         )
     }
   
@@ -69,13 +66,13 @@ export default function Edit({session}) {
             color="primary"
             sx={{marginRight:'2%', width:'120px'}}
             onClick={() => handleSubmit()}
-        >Save</Button>
+        >SAVE</Button>
         <Button
             size='large'
             variant="outlined"
             color="primary"
             sx={{width:'120px'}}
-            onClick={() => handleDelete()}
+            onClick={() => router.push('/posts')}
         >CANCEL</Button>
         </Box>
       </Box>
@@ -84,12 +81,21 @@ export default function Edit({session}) {
 }
 
 export async function getServerSideProps(context) {
-    const session = await getSession(context)
-    console.log('session', session)
+    const session = await getSession({ req: context.req })
+
+    const postId = context.query.id
     
-        return {
-            props: {
-                session
-            }
-        }
+    const signlePostUser = await db
+    .query(
+      `SELECT "post".id as post_id, "post".date_created, "post".title, "post".views, "post".content, "user".id as user_id, "user".name, "user".admin FROM "post" INNER JOIN "user" ON "post".user_id = "user".id WHERE "post".id = ${postId}`,
+    )
+    .then((res) => res.rows[0])
+
+  return {
+    props: {
+      session: session,
+      postId: postId,
+      signlePostUser: signlePostUser,
+    },
+  }
 }
