@@ -1,6 +1,7 @@
 import CardMedia from '@mui/material/CardMedia';
 import { blue } from "@mui/material/colors";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import router from 'next/router';
 
 import {Card, CardHeader, CardContent, CardActions, Avatar, 
 IconButton, Typography, Button } from '@mui/material';
@@ -10,7 +11,8 @@ export default function Post({
     title,
     views,
     userName,
-    dateCreated
+    dateCreated,
+    postId
 }) {
   console.log(dateCreated)
   return (
@@ -46,7 +48,11 @@ export default function Post({
             {views} Views
           </Typography>
         </IconButton>
-        <Button>
+        <Button
+          onClick={() => {
+            router.push('/posts/[id]', `/posts/${postId}`);
+          }}
+        >
             ...Read More
           </Button>
       </CardActions>

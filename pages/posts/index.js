@@ -58,13 +58,14 @@ export default function Posts({session, postUser, sessionUser}) {
               Welcome {sessionUser.name}!
             </Typography>
             {/* <Typography variant="h5" component="h3" sx={{textAlign: 'center', marginBottom: '2%'}}>
-              Below you are the posts of other users.
+              You have registered as {sessionUser.role === 'admin' ? 'an Admin User' : 'a Standard User'}
             </Typography> */}
             <Toolbar sx={{display: 'flex', justifyContent: 'space-between',flexWrap:'wrap', width:'100%' }}>
               {(
                 postUser.slice(0, visible).map(post => (
                   <Post
                     key={post.post_id}
+                    postId={post.post_id}
                     dateCreated={dateFormatted(post.date_created)}
                     title={post.title}
                     views={post.views}
