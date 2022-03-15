@@ -1,13 +1,26 @@
 import db from '../../lib/db'
+import { useState, useEffect } from 'react';
 
 import { getSession, signIn, signOut, useSession} from "next-auth/react";
 import { Box, Toolbar, Typography, Button, ThemeProvider } from '@mui/material';
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 
+import Post from '../../components/Card/Post'
 
-export default function Posts({session, posts, sessionUser}) {
-  console.log("posts", posts)
+
+export default function Posts({session, postUser, sessionUser}) {
+  console.log("posts and user name", postUser)
   console.log("sessionUser", sessionUser)
+
+  const [dateCreated, setDateCreated] = useState('')
+
+  const dateFormatted = (date) => {
+    const dateObj = new Date(date)
+    const month = dateObj.getUTCMonth() + 1
+    const day = dateObj.getUTCDate()
+    const year = dateObj.getUTCFullYear()
+    return `${month}/${day}/${year}`
+  }
   
   // const [session, loading] = useSession();
   // const [posts, setPosts] = useState([]);
@@ -42,24 +55,29 @@ export default function Posts({session, posts, sessionUser}) {
         </ThemeProvider>
       )}
       {session && (
-        <>
-          Signed in as {session.user.name} <br />
-          <button onClick={() => signOut()}>Sign out</button>
-        </>
+        <ThemeProvider theme={theme}>
+        <Box style={{ margin: "16px 0px", display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center'}} variant="outlined">
+          <Typography variant="h2" component="h3" sx={{textAlign: 'center', margin: '2% 0'}}>
+            Welcome {sessionUser.name}!
+          </Typography>
+        </Box>
+        <Toolbar sx={{display: 'flex', justifyContent: 'space-between' ,flexWrap:'wrap', width:'100%' }}>
+          {sessionUser.admin && (
+            postUser.map(post => (
+              <Post
+                key={post.id}
+                dateCreated={dateFormatted(post.date_created)}
+                title={post.title}
+                views={post.views}
+                userName={post.name}
+                date={post.date}
+              />
+            ))
+          )}
+        </Toolbar> 
+  </ThemeProvider>
       )}
     </div>
-    // {<div>
-    //   <h1>Posts</h1>
-    //   <ul>
-
-    //     {posts.map(post => (
-    //       <li key={post.id}>
-    //         <h2>{post.title}</h2>
-    //         <p>{post.content}</p>
-    //       </li>
-    //     ))}
-    //   </ul>
-    // </div>}
   )
 }
 
@@ -69,8 +87,12 @@ export async function getServerSideProps (context) {
   console.log("session",session)
   console.log("context", context)
 
-  const posts = await db.query('SELECT * FROM post').then((results)=> results.rows)
+  // const posts = await db.query('SELECT * FROM post').then((results)=> results.rows)
   
+  //create a new table called user_post
+
+  const postUser = await db.query(`SELECT "post".id, "post".date_created, "post".title, "post".views, "post".content, "user".name, "user".admin FROM "post" INNER JOIN "user" ON "post".user_id = "user".id`).then((results)=> results.rows)
+  console.log("postUser", postUser)
   
   if(session){
     const sessionUser = await db.query(`SELECT id, email, admin, name  FROM "user" WHERE id = ${session.user.id}`).then((results)=> results.rows[0])
@@ -78,7 +100,7 @@ export async function getServerSideProps (context) {
     return {
       props: {
         session,
-        posts,
+        postUser,
         sessionUser
       }
     }
