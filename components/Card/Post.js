@@ -14,7 +14,6 @@ export default function Post({
     dateCreated,
     postId
 }) {
-  console.log(dateCreated)
   return (
     <Card sx={{ minWidth:320, maxWidth: 345, minHeight: 220, marginBottom:'2%' }}>
            <CardHeader
@@ -37,7 +36,7 @@ export default function Post({
         alt="Paella dish"
       /> */}
       <CardContent>
-        <Typography variant="body2" color="text.secondary" sx={{maxHeight:'60px', overflow: 'hidden'}}>
+        <Typography variant="body2" color="text.secondary" sx={{maxHeight:'60px', overflow: 'hidden', ":first-letter":{textTransform:'capitalize'} }}>
           {title}
         </Typography>
       </CardContent>

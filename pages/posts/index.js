@@ -96,14 +96,8 @@ export default function Posts({session, postUser, sessionUser}) {
 export async function getServerSideProps (context) {
   const session = await getSession(context);
   console.log("session",session)
-  console.log("context", context)
-
-  // const posts = await db.query('SELECT * FROM post').then((results)=> results.rows)
-  
-  //create a new table called user_post
 
   const postUser = await db.query(`SELECT "post".id as post_id, "post".date_created, "post".title, "post".views, "post".content, "user".name, "user".admin FROM "post" INNER JOIN "user" ON "post".user_id = "user".id`).then((results)=> results.rows)
-  console.log("postUser", postUser)
   
   if(session){
     const sessionUser = await db.query(`SELECT id, email, admin, name  FROM "user" WHERE id = ${session.user.id}`).then((results)=> results.rows[0])

@@ -48,7 +48,7 @@ const Footer = () => {
           }}
         />
         <BottomNavigationAction
-          label="author: Marta Gaworek"
+          label="Website Author"
           sx={{padding:'2px'}} 
           icon={
             <Avatar aria-label="profile letter" label="none" >
