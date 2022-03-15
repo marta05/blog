@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import { getSession } from 'next-auth/react';
 import axios from 'axios';
 import db from '../../../lib/db';
@@ -6,11 +6,12 @@ import db from '../../../lib/db';
 import { Box, TextField, Toolbar, Button } from '@mui/material';
 import router from 'next/router';
 
-export default function Edit({session, postId, signlePostUser}) {
+export default function Edit({session, postId, singlePostUser}) {
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
+    console.log(singlePostUser)
     
     const handleSubmit = () => {
         axios.put('/api/edit',
@@ -25,6 +26,13 @@ export default function Edit({session, postId, signlePostUser}) {
         }
         )
     }
+
+    useEffect(() => {
+        if(singlePostUser) {
+            setTitle(singlePostUser.title)
+            setContent(singlePostUser.content)
+        }
+    }, [singlePostUser])
   
 
   return (
@@ -85,7 +93,7 @@ export async function getServerSideProps(context) {
 
     const postId = context.query.id
     
-    const signlePostUser = await db
+    const singlePostUser = await db
     .query(
       `SELECT "post".id as post_id, "post".date_created, "post".title, "post".views, "post".content, "user".id as user_id, "user".name, "user".admin FROM "post" INNER JOIN "user" ON "post".user_id = "user".id WHERE "post".id = ${postId}`,
     )
@@ -95,7 +103,7 @@ export async function getServerSideProps(context) {
     props: {
       session: session,
       postId: postId,
-      signlePostUser: signlePostUser,
+      singlePostUser: singlePostUser,
     },
   }
 }

@@ -33,9 +33,9 @@ export default NextAuth({
            console.log("The user with the email doesn't exist")
            return null
         } else if(
+          //the output of verifyPassword is a boolean (true if the password matches, false if it doesn't)
           await verifyPassword(credentials.password, dbUser.hashed_password)
          ) {
-          console.log("paswordsasdkaldasld", credentials.password, dbUser.hashed_password)
           return {
             id: dbUser.id,
             name: dbUser.name,

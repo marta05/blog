@@ -10,7 +10,7 @@ import { getSession } from 'next-auth/react'
 import db from '../../lib/db'
 import axios from 'axios'
 
-export default function PostId({ session, postId, signlePostUser }) {
+export default function PostId({ session, postId, singlePostUser }) {
   const dateFormatted = (date) => {
     const dateObj = new Date(date)
     const month = dateObj.getUTCMonth() + 1
@@ -21,7 +21,7 @@ export default function PostId({ session, postId, signlePostUser }) {
 
   console.log(session)
 
-  console.log(signlePostUser)
+  console.log(singlePostUser)
   let theme = createTheme()
   theme = responsiveFontSizes(theme)
 
@@ -70,7 +70,7 @@ export default function PostId({ session, postId, signlePostUser }) {
 
   return (
     <div>
-      {!session && signlePostUser === null
+      {!session && singlePostUser === null
       && (
         <ThemeProvider theme={theme}>
           <Box
@@ -119,7 +119,7 @@ export default function PostId({ session, postId, signlePostUser }) {
           </Box>
         </ThemeProvider>
       )}
-       {session && signlePostUser === undefined && (
+       {session && singlePostUser === undefined && (
         <ThemeProvider theme={theme}>
           <Box
             sx={{
@@ -172,7 +172,7 @@ export default function PostId({ session, postId, signlePostUser }) {
           </Box>
         </ThemeProvider>
       )}
-      {session && signlePostUser !== undefined && 
+      {session && singlePostUser !== undefined && 
       (
         <ThemeProvider theme={theme}>
           <Box
@@ -195,15 +195,15 @@ export default function PostId({ session, postId, signlePostUser }) {
                 variant="body"
                 sx={{ textAlign: 'center', marginTop: '1%' }}
               >
-                Post Author: {signlePostUser.name}
+                Post Author: {singlePostUser.name}
               </Typography>
               <Typography variant="body" sx={{ textAlign: 'center' }}>
-                Date Created: {dateFormatted(signlePostUser.date_created)}
+                Date Created: {dateFormatted(singlePostUser.date_created)}
               </Typography>
             </Box>
 
-            {signlePostUser.user_id === session.user.id && 
-             signlePostUser.admin && (
+            {singlePostUser.user_id === session.user.id && 
+             singlePostUser.admin && (
               <Box sx={{display:'flex', justifyContent:'end'}}>
                 <Button
                   size='small'
@@ -246,7 +246,7 @@ export default function PostId({ session, postId, signlePostUser }) {
                 ':first-letter': { textTransform: 'capitalize' },
               }}
             >
-              {signlePostUser.title}
+              {singlePostUser.title}
             </Typography>
             <Typography
               variant="h5"
@@ -256,12 +256,12 @@ export default function PostId({ session, postId, signlePostUser }) {
                 marginBottom: '2%',
               }}
             >
-              {signlePostUser.content}
+              {singlePostUser.content}
             </Typography>
             <IconButton aria-label="see views">
               <RemoveRedEyeIcon />
               <Typography variant="body2" color="text.secondary">
-                Views: {signlePostUser.views}
+                Views: {singlePostUser.views}
               </Typography>
             </IconButton>
           </Box>
@@ -277,7 +277,7 @@ export async function getServerSideProps(context) {
   const postId = context.query.id
 
   //query to extract the post information and user information where the post Id is equal to the id in the url
-  const signlePostUser = await db
+  const singlePostUser = await db
     .query(
       `SELECT "post".id as post_id, "post".date_created, "post".title, "post".views, "post".content, "user".id as user_id, "user".name, "user".admin FROM "post" INNER JOIN "user" ON "post".user_id = "user".id WHERE "post".id = ${postId}`,
     )
@@ -287,7 +287,7 @@ export async function getServerSideProps(context) {
     props: {
       session: session,
       postId: postId,
-      signlePostUser: signlePostUser,
+      singlePostUser: singlePostUser,
     },
   }
 }
