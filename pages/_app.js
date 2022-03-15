@@ -13,8 +13,8 @@ import '../styles/globals.css';
 
 const clientSideEmotionCache = createEmotionCache();
 
-const MyApp = (props) => {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+export default function MyApp(props){
+  const {Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   return (
     <SessionProvider>
@@ -24,7 +24,8 @@ const MyApp = (props) => {
       </Head>
       <ThemeProvider theme={lightTheme}>
         <CssBaseline />
-        <Header />
+        <Header 
+        />
         <Toolbar>
           <Container
               maxWidth="lg"
@@ -39,5 +40,3 @@ const MyApp = (props) => {
     </SessionProvider>
   );
 };
-
-export default MyApp;
