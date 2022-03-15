@@ -17,7 +17,7 @@ export default function Post({ title, views, userName, dateCreated, postId }) {
   return (
     <Card
       elevation={4}
-      sx={{maxWidth: 345, minHeight: 220, marginBottom: '2%' }}
+      sx={{minWidth:300, maxWidth: 345, minHeight: 220, marginBottom: '2%' }}
     >
       <CardHeader
         sx={{ paddingBottom: '5px' }}

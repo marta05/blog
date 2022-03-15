@@ -4,11 +4,11 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import { signIn } from 'next-auth/react'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit';
-
-import { palette } from '@mui/system'
+import Router from 'next/router'
 
 import { getSession } from 'next-auth/react'
 import db from '../../lib/db'
+import axios from 'axios'
 
 export default function PostId({ session, postId, signlePostUser }) {
   const dateFormatted = (date) => {
@@ -19,15 +19,34 @@ export default function PostId({ session, postId, signlePostUser }) {
     return `${month}/${day}/${year}`
   }
 
+  console.log(session)
+
   console.log(signlePostUser)
   let theme = createTheme()
   theme = responsiveFontSizes(theme)
 
+  const handleDelete = async () => {
+    await deletePost()
+    Router.push('/posts')
+  }
+
+  const deletePost = async () => {
+    try{
+      await axios.delete(`/api/post`, {
+        data: { postId: postId }
+      })
+      Router.push('/posts')
+    } catch(err) {
+      console.log(err)
+    }
+  }
+    
   // USER can delete the post only if session.id is equal to singlePostUser.userId
 
   return (
     <div>
-      {!session && (
+      {!session && signlePostUser === null
+      && (
         <ThemeProvider theme={theme}>
           <Box
             sx={{
@@ -75,7 +94,61 @@ export default function PostId({ session, postId, signlePostUser }) {
           </Box>
         </ThemeProvider>
       )}
-      {session && (
+       {session && signlePostUser === undefined && (
+        <ThemeProvider theme={theme}>
+          <Box
+            sx={{
+              width: '60%',
+              height: '70vh',
+              margin: '0 auto',
+              display: 'flex',
+              flexDirection: 'column',
+              alignContent: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Box
+              style={{
+                margin: '16px 0px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignContent: 'center',
+              }}
+              variant="outlined"
+            >
+              <Typography
+                variant="h2"
+                sx={{ textAlign: 'center', margin: '4% 0' }}
+              >
+                Post not found.
+              </Typography>
+              <Typography
+                variant="h5"
+                component="h3"
+                sx={{ textAlign: 'center', marginBottom: '4%' }}
+              >
+                Please try again.
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                margin: '0 auto',
+              }}
+            >
+            <Button
+              size="large"
+              variant="contained"
+              onClick={() => Router.push('/posts')}
+            >
+              Back to Posts
+            </Button>
+            </Box>
+          </Box>
+        </ThemeProvider>
+      )}
+      {session && signlePostUser !== undefined && 
+      (
         <ThemeProvider theme={theme}>
           <Box
             sx={{
@@ -168,7 +241,8 @@ export default function PostId({ session, postId, signlePostUser }) {
             </IconButton>
           </Box>
         </ThemeProvider>
-      )}
+      )} 
+     
     </div>
   )
 }

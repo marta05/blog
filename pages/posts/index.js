@@ -15,6 +15,7 @@ import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 import Post from '../../components/Card/Post'
 import Router from 'next/router'
 
+
 export default function Posts({ session, postUser, sessionUser }) {
   const [visible, setVisible] = useState(3)
 
@@ -31,10 +32,8 @@ export default function Posts({ session, postUser, sessionUser }) {
   }
 
   const handleClick = async () => {
-    // await createPost()
     Router.push('/posts/edit')
   }
-
   
   let theme = createTheme()
   theme = responsiveFontSizes(theme)
