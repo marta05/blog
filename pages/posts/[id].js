@@ -26,8 +26,13 @@ export default function PostId({ session, postId, signlePostUser }) {
   theme = responsiveFontSizes(theme)
 
   const handleDelete = async () => {
-    await deletePost()
-    Router.push('/posts')
+    const confirmation = window.confirm('Are you sure you want to delete this post?')
+    if (confirmation) {
+      await deletePost()
+      Router.push('/posts')
+    } else {
+      return
+    }
   }
 
   const deletePost = async () => {
@@ -41,7 +46,11 @@ export default function PostId({ session, postId, signlePostUser }) {
     }
   }
     
-  // USER can delete the post only if session.id is equal to singlePostUser.userId
+
+  //in return below are covered 3 cases, 
+  //when user is not logged in and there is no post in the database
+  //when user is logged in and there is no post in the database
+  //when user is logged in and there is a post in the database
 
   return (
     <div>
