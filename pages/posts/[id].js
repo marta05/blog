@@ -1,8 +1,9 @@
-import { ThemeProvider } from '@mui/private-theming'
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
-import { Toolbar, Box, Typography, IconButton, Button } from '@mui/material'
+import {Box, Typography, IconButton, Button, ThemeProvider } from '@mui/material'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
-import {signIn} from 'next-auth/react'
+import { signIn } from 'next-auth/react'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit';
 
 import { palette } from '@mui/system'
 
@@ -18,6 +19,7 @@ export default function PostId({ session, postId, signlePostUser }) {
     return `${month}/${day}/${year}`
   }
 
+  console.log(signlePostUser)
   let theme = createTheme()
   theme = responsiveFontSizes(theme)
 
@@ -27,7 +29,7 @@ export default function PostId({ session, postId, signlePostUser }) {
     <div>
       {!session && (
         <ThemeProvider theme={theme}>
-          <Toolbar
+          <Box
             sx={{
               width: '60%',
               height: '70vh',
@@ -50,7 +52,6 @@ export default function PostId({ session, postId, signlePostUser }) {
             >
               <Typography
                 variant="h2"
-                component="h3"
                 sx={{ textAlign: 'center', margin: '4% 0' }}
               >
                 Sign in to see the posts.
@@ -71,16 +72,18 @@ export default function PostId({ session, postId, signlePostUser }) {
             >
               Sign in
             </Button>
-          </Toolbar>
+          </Box>
         </ThemeProvider>
       )}
       {session && (
         <ThemeProvider theme={theme}>
-          <Toolbar
+          <Box
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
               alignContent: 'center',
+              margin:'1% 0'
+
             }}
           >
             <Box
@@ -100,13 +103,33 @@ export default function PostId({ session, postId, signlePostUser }) {
                 Date Created: {dateFormatted(signlePostUser.date_created)}
               </Typography>
             </Box>
-            <IconButton aria-label="see views">
-              <RemoveRedEyeIcon />
-              <Typography variant="body2" color="text.secondary">
-                Views: {signlePostUser.views}
-              </Typography>
-            </IconButton>
-          </Toolbar>
+
+            {signlePostUser.user_id === session.user.id && 
+             signlePostUser.admin && (
+              <Box sx={{display:'flex', justifyContent:'end'}}>
+                <Button
+                  size='small'
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => handleEdit()}
+                  sx={{ minWidth: '150px', margin: '4px 10px 4px 0' }}
+                  startIcon={<EditIcon />}
+                >
+                  Edit Post
+                </Button>
+                <Button
+                 size='small'
+                  variant="outlined"
+                  color="error"
+                  onClick={() => handleDelete()}
+                  sx={{ minWidth: '150px', margin: '4px 0 4px 0' }}
+                  startIcon={<DeleteIcon />}
+                >
+                  Delete Post
+                </Button>
+              </Box>
+            )}
+          </Box>
           <Box
             style={{
               display: 'flex',
@@ -137,6 +160,12 @@ export default function PostId({ session, postId, signlePostUser }) {
             >
               {signlePostUser.content}
             </Typography>
+            <IconButton aria-label="see views">
+              <RemoveRedEyeIcon />
+              <Typography variant="body2" color="text.secondary">
+                Views: {signlePostUser.views}
+              </Typography>
+            </IconButton>
           </Box>
         </ThemeProvider>
       )}

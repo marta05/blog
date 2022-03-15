@@ -48,6 +48,11 @@ export default function Header() {
             <Image src={Ninja} alt="ninja" width="60" height="45" />
           </Container>
           <MenuItem
+            onClick={() => Router.push("/posts")}
+          >
+           HOME 
+          </MenuItem>
+          <MenuItem
             onClick={() => signOut({ callbackUrl: 'http://localhost:3000/' })}
           >
            SIGN OUT

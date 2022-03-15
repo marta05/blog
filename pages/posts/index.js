@@ -13,7 +13,6 @@ import {
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 
 import Post from '../../components/Card/Post'
-import axios from 'axios'
 import Router from 'next/router'
 
 export default function Posts({ session, postUser, sessionUser }) {
@@ -32,24 +31,11 @@ export default function Posts({ session, postUser, sessionUser }) {
   }
 
   const handleClick = async () => {
-    await createPost()
+    // await createPost()
     Router.push('/posts/edit')
   }
 
-  const createPost = () => {
-      axios.post('/api/edit',
-      {
-        title: '',
-        content: '',
-        userId: sessionUser.id,
-        dateCreated: new Date(),        
-      })
-      .then(res => {
-        console.log(res)
-      }
-    )
-  }
-
+  
   let theme = createTheme()
   theme = responsiveFontSizes(theme)
 
