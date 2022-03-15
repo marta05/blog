@@ -13,6 +13,8 @@ import {
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 
 import Post from '../../components/Card/Post'
+import axios from 'axios'
+import Router from 'next/router'
 
 export default function Posts({ session, postUser, sessionUser }) {
   const [visible, setVisible] = useState(3)
@@ -27,6 +29,25 @@ export default function Posts({ session, postUser, sessionUser }) {
     const day = dateObj.getUTCDate()
     const year = dateObj.getUTCFullYear()
     return `${month}/${day}/${year}`
+  }
+
+  const handleClick = async () => {
+    await createPost()
+    Router.push('/posts/edit')
+  }
+
+  const createPost = () => {
+      axios.post('/api/edit',
+      {
+        title: '',
+        content: '',
+        userId: sessionUser.id,
+        dateCreated: new Date(),        
+      })
+      .then(res => {
+        console.log(res)
+      }
+    )
   }
 
   let theme = createTheme()
@@ -92,80 +113,88 @@ export default function Posts({ session, postUser, sessionUser }) {
               justifyContent: 'center',
             }}
           >
-            <Paper elevation={4} sx={{padding: '20px', margin:'2% 0', width:'100%', boxSizing:'content-box'}}>
-              {/* <Box
-                // p={6}
-                style={{
-                  margin: '16px 0px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignContent: 'center',
-                }}
-                sx={{ bgcolor: 'background.paper' }}
-                variant="outlined"
-              > */}
-                <Typography
-                  variant="h2"
-                  component="h3"
-                  sx={{ textAlign: 'center', margin: '2% 0' }}
-                >
-                  Welcome {sessionUser.name}!
-                </Typography>
-                {/* <Typography
-                  variant="h4"
-                  component="h4"
-                  sx={{
-                    textAlign: 'center',
-                    marginBottom: '2%',
-                    color: 'secondary.main',
-                  }}
-                >
-                  You are registered as{' '}
-                  {sessionUser.admin ? 'an Admin User' : 'a Standard User'}
-                </Typography> */}
-                <Typography
-                  variant="body"
-                  component="h3"
-                  sx={{ textAlign: 'center', marginBottom: '2%', fontWeight:'500' }}
-                >
-                  {sessionUser.admin
-                    ? 'As an admin user you can view posts of all other users, as well as add, edit and delete your own posts'
-                    : 'As a standard user your have the permission to view the posts of all other users'}
-                </Typography>
-              {/* </Box> */}
-            </Paper>
-            <Paper elevation={4} sx={{padding: '20px', margin:'2% 0', width:'100%', boxSizing:'content-box', display:'flex', flexDirection:'column', alignItems:'center'}}>
-            <Toolbar
+            <Paper
+              elevation={4}
               sx={{
                 display: 'flex',
-                justifyContent: 'space-around',
-                flexWrap: 'wrap',
+                flexDirection: 'column',
+                alignItems: 'center',
+                padding: '15px',
+                margin: '1% 0',
                 width: '100%',
+                boxSizing: 'content-box',
               }}
             >
-              {postUser.slice(0, visible).map((post) => (
-                <Post
-                  key={post.post_id}
-                  postId={post.post_id}
-                  dateCreated={dateFormatted(post.date_created)}
-                  title={post.title}
-                  views={post.views}
-                  userName={post.name}
-                  date={post.date}
-                />
-              ))}
-            </Toolbar>
-            {postUser.length > visible && (
-              <Button
-                variant="contained"
-                size="large"
-                onClick={() => setVisible(visible + 3)}
+              <Typography
+                variant="h2"
+                component="h3"
+                sx={{ textAlign: 'center', margin: '2% 0' }}
               >
-                Show more
-              </Button>
-            )}
-          </Paper>
+                Welcome {sessionUser.name}!
+              </Typography>
+              <Typography
+                variant="body"
+                component="h3"
+                sx={{
+                  textAlign: 'center',
+                  marginBottom: '2%',
+                  fontWeight: '500',
+                }}
+              >
+                {sessionUser.admin
+                  ? 'As an admin user you can view posts of all other users, as well as add, edit and delete your own posts'
+                  : 'As a standard user your have the permission to view the posts of all other users'}
+              </Typography>
+              {sessionUser.admin ? (
+                <Button variant="contained" color="success"
+                  onClick={() => handleClick()}
+                >
+                  + Add New Post
+                </Button>
+              ) : null}
+            </Paper>
+            <Paper
+              elevation={4}
+              sx={{
+                padding: '20px',
+                margin: '2% 0',
+                width: '100%',
+                boxSizing: 'content-box',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <Toolbar
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-around',
+                  flexWrap: 'wrap',
+                  width: '100%',
+                }}
+              >
+                {postUser.slice(0, visible).map((post) => (
+                  <Post
+                    key={post.post_id}
+                    postId={post.post_id}
+                    dateCreated={dateFormatted(post.date_created)}
+                    title={post.title}
+                    views={post.views}
+                    userName={post.name}
+                    date={post.date}
+                  />
+                ))}
+              </Toolbar>
+              {postUser.length > visible && (
+                <Button
+                  variant="outlined"
+                  size="large"
+                  onClick={() => setVisible(visible + 3)}
+                >
+                  Show more
+                </Button>
+              )}
+            </Paper>
           </Toolbar>
         </ThemeProvider>
       )}

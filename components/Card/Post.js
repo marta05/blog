@@ -1,4 +1,3 @@
-import CardMedia from '@mui/material/CardMedia'
 import { blue } from '@mui/material/colors'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import router from 'next/router'
