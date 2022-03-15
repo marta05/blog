@@ -1,18 +1,28 @@
 import db from '../../lib/db'
+import { useState, useEffect } from 'react';
 
 import { getSession, signIn, signOut, useSession} from "next-auth/react";
 import { Box, Toolbar, Typography, Button, ThemeProvider } from '@mui/material';
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 
+import Post from '../../components/Card/Post'
 
-export default function Posts({session, posts, sessionUser}) {
-  console.log("posts", posts)
+
+export default function Posts({session, postUser, sessionUser}) {
+
+  const [visible, setVisible] = useState(3)
+
+  console.log("posts and user name", postUser)
   console.log("sessionUser", sessionUser)
-  
-  // const [session, loading] = useSession();
-  // const [posts, setPosts] = useState([]);
-  // const [sessionUser, setSessionUser] = useState(null);
   console.log("session", session)
+  
+  const dateFormatted = (date) => {
+    const dateObj = new Date(date)
+    const month = dateObj.getUTCMonth() + 1
+    const day = dateObj.getUTCDate()
+    const year = dateObj.getUTCFullYear()
+    return `${month}/${day}/${year}`
+  }
 
   let theme = createTheme()
   theme = responsiveFontSizes(theme)
@@ -42,24 +52,43 @@ export default function Posts({session, posts, sessionUser}) {
         </ThemeProvider>
       )}
       {session && (
-        <>
-          Signed in as {session.user.name} <br />
-          <button onClick={() => signOut()}>Sign out</button>
-        </>
+        <ThemeProvider theme={theme}>
+          <Toolbar sx={{display: 'flex', flexDirection: 'column', justifyContent:'center'}}>
+            <Typography variant="h2" component="h3" sx={{textAlign: 'center', margin: '2% 0'}}>
+              Welcome {sessionUser.name}!
+            </Typography>
+            {/* <Typography variant="h5" component="h3" sx={{textAlign: 'center', marginBottom: '2%'}}>
+              You have registered as {sessionUser.role === 'admin' ? 'an Admin User' : 'a Standard User'}
+            </Typography> */}
+            <Toolbar sx={{display: 'flex', justifyContent: 'space-between',flexWrap:'wrap', width:'100%' }}>
+              {(
+                postUser.slice(0, visible).map(post => (
+                  <Post
+                    key={post.post_id}
+                    postId={post.post_id}
+                    dateCreated={dateFormatted(post.date_created)}
+                    title={post.title}
+                    views={post.views}
+                    userName={post.name}
+                    date={post.date}
+                  />
+                ))
+              )}
+            </Toolbar> 
+              {postUser.length > visible && (
+                <Button
+
+                  variant="contained"
+                  size="large"
+                  onClick={() => setVisible(visible + 3)}
+                >
+                  Show more
+                </Button>
+              )}
+          </Toolbar>
+        </ThemeProvider>
       )}
     </div>
-    // {<div>
-    //   <h1>Posts</h1>
-    //   <ul>
-
-    //     {posts.map(post => (
-    //       <li key={post.id}>
-    //         <h2>{post.title}</h2>
-    //         <p>{post.content}</p>
-    //       </li>
-    //     ))}
-    //   </ul>
-    // </div>}
   )
 }
 
@@ -67,10 +96,8 @@ export default function Posts({session, posts, sessionUser}) {
 export async function getServerSideProps (context) {
   const session = await getSession(context);
   console.log("session",session)
-  console.log("context", context)
 
-  const posts = await db.query('SELECT * FROM post').then((results)=> results.rows)
-  
+  const postUser = await db.query(`SELECT "post".id as post_id, "post".date_created, "post".title, "post".views, "post".content, "user".name, "user".admin FROM "post" INNER JOIN "user" ON "post".user_id = "user".id`).then((results)=> results.rows)
   
   if(session){
     const sessionUser = await db.query(`SELECT id, email, admin, name  FROM "user" WHERE id = ${session.user.id}`).then((results)=> results.rows[0])
@@ -78,8 +105,8 @@ export async function getServerSideProps (context) {
     return {
       props: {
         session,
-        posts,
-        sessionUser
+        postUser,
+        sessionUser,
       }
     }
   } else {

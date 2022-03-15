@@ -6,7 +6,7 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction'
 import Router from 'next/router'
 import LinkedinIcon from '@mui/icons-material/LinkedIn'
 import GithubIcon from '@mui/icons-material/GitHub'
-import { Avatar } from '@mui/material'
+import { Avatar, Box } from '@mui/material'
 
 import Image from 'next/image'
 import Img from '../../public/MartaGaworek.png'
@@ -20,6 +20,10 @@ const Footer = () => {
 
   return (
     <>
+    <Box sx={{
+      boxShadow: 8,
+      marginTop: '1%'
+      }}>
       <BottomNavigation
         showlabel=""
         value={value}
@@ -27,20 +31,25 @@ const Footer = () => {
           display: `flex`,
           justifyContent: `center`,
           alignContent:'center',
-          marginTop: '10px',
+          alignItems: `center`,
+          position: 'static',
+          width: '100%',
+          height: '100%',
+          paddingTop: '5px'
         }}
         onChange={handleChange}
       >
         <BottomNavigationAction
           label="LinkedIn"
-        //   sx={{width: '5px'}}
-          icon={<LinkedinIcon />}
+          sx={{padding:'2px'}} 
+          icon={<LinkedinIcon sx={{padding:'0'}} />}
           onClick={() => {
             Router.push('https://www.linkedin.com/in/marta-gaworek-197a77107/')
           }}
         />
         <BottomNavigationAction
-          label="author: Marta Gaworek"
+          label="Website Author"
+          sx={{padding:'2px'}} 
           icon={
             <Avatar aria-label="profile letter" label="none" >
               <Image src={Img} alt="author" width="74" height="74" />
@@ -49,12 +58,15 @@ const Footer = () => {
         ></BottomNavigationAction>
         <BottomNavigationAction
           label="GitHub"
+          sx={{padding:'2px'}} 
+
           icon={<GithubIcon />}
           onClick={() => {
             Router.push('https://github.com/marta05')
           }}
         />
       </BottomNavigation>
+      </Box>
     </>
   )
 }

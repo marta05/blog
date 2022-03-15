@@ -10,7 +10,7 @@ const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 const Header = () => {
   return (
     <>
-      <AppBar position="fixed">
+      <AppBar position="fixed" >
         <Toolbar>
           <Container
             maxWidth="lg"
