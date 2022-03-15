@@ -44,7 +44,7 @@ export default function Home({ session }) {
           </Typography>
           <Image src={Ninja} alt="ninja" width="200" height="120" />
           <Toolbar
-            sx={{ marginTop: '3%', width: '100%', justifyContent:'center'}}
+            sx={{ marginTop: '2%', width: '100%', justifyContent:'center'}}
           >
             <Button
               variant="contained"
