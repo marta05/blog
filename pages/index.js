@@ -87,7 +87,7 @@ export default function Home({ session }) {
                   router.push('/posts')
                 }}
               >
-                Posts Page
+                Home Page
               </Button>
             </Toolbar>
           )}
