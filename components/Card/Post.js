@@ -17,13 +17,12 @@ export default function Post({ title, views, userName, dateCreated, postId }) {
   return (
     <Card
       elevation={4}
-      sx={{width:'340px',  minHeight: 220, marginBottom: '2%' }}
+      sx={{ width: '340px', minHeight: 220, marginBottom: '2%' }}
     >
       <CardHeader
         sx={{ paddingBottom: '5px' }}
         avatar={
           <Avatar sx={{ bgcolor: blue[500] }} aria-label="profile letter">
-            {/* extract the first letter of user name */}
           </Avatar>
         }
         title={userName}

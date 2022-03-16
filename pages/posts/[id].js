@@ -1,17 +1,18 @@
-import { createTheme, responsiveFontSizes } from '@mui/material/styles'
-import {Box, Typography, IconButton, Button, ThemeProvider } from '@mui/material'
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
-import { signIn } from 'next-auth/react'
-import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit';
-import Router from 'next/router'
-import { useEffect } from 'react'
-
 import { getSession } from 'next-auth/react'
 import db from '../../lib/db'
 import axios from 'axios'
+import { createTheme, responsiveFontSizes } from '@mui/material/styles'
+import {Box,Typography,IconButton,Button,ThemeProvider} from '@mui/material'
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import Router from 'next/router'
+import Unauthorized from '../../components/Unauthorized/Unauthorized'
+
 
 export default function PostId({ session, postId, singlePostUser }) {
+
+  //convert the date object to a readable format
   const dateFormatted = (date) => {
     const dateObj = new Date(date)
     const month = dateObj.getUTCMonth() + 1
@@ -20,97 +21,48 @@ export default function PostId({ session, postId, singlePostUser }) {
     return `${month}/${day}/${year}`
   }
 
-
-  console.log(session)
-
-  console.log(singlePostUser)
+  //activate responsive font sizes
   let theme = createTheme()
   theme = responsiveFontSizes(theme)
 
+  //delete post and reroute user to /posts page
   const handleDelete = async () => {
-    const confirmation = window.confirm('Are you sure you want to delete this post?')
+    const confirmation = window.confirm(
+      'Are you sure you want to delete this post?',
+    )
     if (confirmation) {
       await deletePost()
       Router.push('/posts')
     } else {
-      return
+      return null
     }
   }
 
   const deletePost = async () => {
-    try{
+    try {
       await axios.delete(`/api/post`, {
-        data: { postId: postId }
+        data: { postId: postId },
       })
       Router.push('/posts')
-    } catch(err) {
+    } catch (err) {
       console.log(err)
     }
   }
 
-
+  //On click of edit button, reroute user to /posts/edit/[id] page
   const handleEdit = async () => {
-    // await editPost()
     Router.push('/posts/edit/[id]', `/posts/edit/${postId}`)
   }
 
-  //in return below are covered 3 cases, 
-  //when user is not logged in and there is no post in the database
-  //when user is logged in and there is no post in the database
+  //in return below are covered 3 cases,
+  //when user is not logged in
+  //when user is logged in and there is no post in the database/it doesn't exist
   //when user is logged in and there is a post in the database
 
   return (
     <div>
-      {!session && singlePostUser === null
-      && (
-        <ThemeProvider theme={theme}>
-          <Box
-            sx={{
-              width: '60%',
-              height: '70vh',
-              margin: '0 auto',
-              display: 'flex',
-              flexDirection: 'column',
-              alignContent: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Box
-              style={{
-                margin: '16px 0px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignContent: 'center',
-              }}
-              variant="outlined"
-            >
-              <Typography
-                variant="h2"
-                sx={{ textAlign: 'center', margin: '4% 0' }}
-              >
-                Sign in to see the posts.
-              </Typography>
-              <Typography
-                variant="h5"
-                component="h3"
-                sx={{ textAlign: 'center', marginBottom: '4%' }}
-              >
-                Make sure to toggle Admin features to share your posts with the
-                community of bloggers!
-              </Typography>
-            </Box>
-            <Button
-              size="large"
-              variant="contained"
-              onClick={() => signIn({ redirect: '/api/auth/signin' })}
-            >
-              Sign in
-            </Button>
-          </Box>
-        </ThemeProvider>
-      )}
-       {session && singlePostUser === undefined && (
+      {!session && <Unauthorized />}
+      {session && singlePostUser === undefined && (
         <ThemeProvider theme={theme}>
           <Box
             sx={{
@@ -152,27 +104,25 @@ export default function PostId({ session, postId, singlePostUser }) {
                 margin: '0 auto',
               }}
             >
-            <Button
-              size="large"
-              variant="contained"
-              onClick={() => Router.push('/posts')}
-            >
-              Back to Posts
-            </Button>
+              <Button
+                size="large"
+                variant="contained"
+                onClick={() => Router.push('/posts')}
+              >
+                Back to Posts
+              </Button>
             </Box>
           </Box>
         </ThemeProvider>
       )}
-      {session && singlePostUser !== undefined && 
-      (
+      {session && singlePostUser !== undefined && (
         <ThemeProvider theme={theme}>
           <Box
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
               alignContent: 'center',
-              margin:'1% 0'
-
+              margin: '1% 0',
             }}
           >
             <Box
@@ -193,31 +143,31 @@ export default function PostId({ session, postId, singlePostUser }) {
               </Typography>
             </Box>
 
-            {singlePostUser.user_id === session.user.id && 
-             singlePostUser.admin && (
-              <Box sx={{display:'flex', justifyContent:'end'}}>
-                <Button
-                  size='small'
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => handleEdit()}
-                  sx={{ minWidth: '150px', margin: '4px 10px 4px 0' }}
-                  startIcon={<EditIcon />}
-                >
-                  Edit Post
-                </Button>
-                <Button
-                 size='small'
-                  variant="outlined"
-                  color="error"
-                  onClick={() => handleDelete()}
-                  sx={{ minWidth: '150px', margin: '4px 0 4px 0' }}
-                  startIcon={<DeleteIcon />}
-                >
-                  Delete Post
-                </Button>
-              </Box>
-            )}
+            {singlePostUser.user_id === session.user.id &&
+              singlePostUser.admin && (
+                <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => handleEdit()}
+                    sx={{ minWidth: '150px', margin: '4px 10px 4px 0' }}
+                    startIcon={<EditIcon />}
+                  >
+                    Edit Post
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    color="error"
+                    onClick={() => handleDelete()}
+                    sx={{ minWidth: '150px', margin: '4px 0 4px 0' }}
+                    startIcon={<DeleteIcon />}
+                  >
+                    Delete Post
+                  </Button>
+                </Box>
+              )}
           </Box>
           <Box
             style={{
@@ -257,8 +207,7 @@ export default function PostId({ session, postId, singlePostUser }) {
             </IconButton>
           </Box>
         </ThemeProvider>
-      )} 
-     
+      )}
     </div>
   )
 }
@@ -267,11 +216,15 @@ export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req })
   const postId = context.query.id
 
-  const updateViews = await db.query(`
+  //when the post page is rendered, the view count is incremented by 1
+  const updateViews = await db.query(
+    `
     UPDATE "post"
     SET views = views + 1
     WHERE id = $1
-    `, [postId])
+    `,
+    [postId],
+  )
 
   //query to extract the post information and user information where the post Id is equal to the id in the url
   const singlePostUser = await db

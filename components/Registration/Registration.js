@@ -1,6 +1,6 @@
 import { useState } from 'react'
+import {signIn} from 'next-auth/react'
 import axios from 'axios'
-import router from 'next/router'
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
@@ -15,7 +15,6 @@ import {
   Avatar,
   CssBaseline,
   TextField,
-  Link,
   Grid,
   Container,
   Select,
@@ -24,7 +23,6 @@ import { InputAdornment, IconButton } from '@mui/material'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 
-import { getSession, signIn, signOut, useSession } from 'next-auth/react'
 
 const style = {
   position: 'absolute',
@@ -49,7 +47,6 @@ export default function SignIn(props) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [userRole, setUserRole] = useState('')
 
   const { open, setOpen } = props
   const handleClose = () => setOpen(false)
@@ -109,7 +106,6 @@ export default function SignIn(props) {
                 <Box
                   component="form"
                   noValidate
-                  // onSubmit={handleSubmit}
                   sx={{ mt: 3 }}
                 >
                   <Grid container spacing={2}>
@@ -156,7 +152,6 @@ export default function SignIn(props) {
                           setPassword(event.target.value)
                         }}
                         InputProps={{
-                          // <-- This is where the toggle button is added.
                           endAdornment: (
                             <InputAdornment position="end">
                               <IconButton
@@ -188,7 +183,6 @@ export default function SignIn(props) {
                           setConfirmPassword(event.target.value)
                         }}
                         InputProps={{
-                          // <-- This is where the toggle button is added.
                           endAdornment: (
                             <InputAdornment position="end">
                               <IconButton
@@ -216,7 +210,6 @@ export default function SignIn(props) {
                           Select User Role
                         </InputLabel>
                         <Select
-                          // label="Select User Role"
                           sx={{ marginBottom: '2%' }}
                           fullWidth
                           labelId="select-admin-role"
@@ -252,11 +245,9 @@ export default function SignIn(props) {
                       <Typography variant="body2" color="textSecondary">
                         *Admin user can view, add, edit, delete the posts
                       </Typography>
-                      {/* add selection login if the user wants to be an admin */}
                     </Grid>
                   </Grid>
                   <Button
-                    // type="submit"
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}

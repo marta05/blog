@@ -1,28 +1,20 @@
 import db from '../../lib/db'
-import { useState, useEffect } from 'react'
+import Register from '../../components/Registration/Registration'
+import Post from '../../components/Card/Post'
 import axios from 'axios'
 import router from 'next/router'
-
-import { getSession, signIn, signOut, useSession } from 'next-auth/react'
-import {
-  Box,
-  Toolbar,
-  Typography,
-  Button,
-  ThemeProvider,
-  Paper,
-} from '@mui/material'
+import { useState } from 'react'
+import { getSession, signIn, useSession } from 'next-auth/react'
+import {Toolbar,Typography,Button,ThemeProvider,Paper} from '@mui/material'
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
+import Unauthorized from '../../components/Unauthorized/Unauthorized'
 
-import Post from '../../components/Card/Post'
+export default function Posts({ postUser, sessionUser }) {
+  const { data: session } = useSession()
 
-
-export default function Posts({postUser, sessionUser }) {
   const [visible, setVisible] = useState(3)
 
-  console.log('posts and user name', postUser)
-  console.log('sessionUser', sessionUser)
-
+  //convert the date object to a readable format
   const dateFormatted = (date) => {
     const dateObj = new Date(date)
     const month = dateObj.getUTCMonth() + 1
@@ -31,82 +23,28 @@ export default function Posts({postUser, sessionUser }) {
     return `${month}/${day}/${year}`
   }
 
-  const {data: session} = useSession()
+  //insert new post to the database with id, userId and dateCreated
+  const handleSubmit = () => {
+    axios
+      .post('/api/post', {
+        title: '',
+        content: '',
+        userId: session.user.id,
+        dateCreated: new Date(),
+      })
+      .then(function (response) {
+        router.push(`/posts/edit/${response.data.id}`)
+      })
+  }
 
-  console.log('session', session)
-
-
-  // const handleClick = async () => {
-  //   Router.push('/posts/edit')
-  // }
-
-      const handleSubmit = () => {
-        axios.post('/api/edit',
-        {
-            title: '',
-            content: '',
-            userId: session.user.id,
-            dateCreated: new Date(),        
-        })
-        .then(function (response) {
-            router.push(`/posts/edit/${response.data.id}`)
-        }
-        )
-    }
-  
+  //activate responsive font sizes
   let theme = createTheme()
   theme = responsiveFontSizes(theme)
 
   return (
     <div>
       {!session && (
-        <ThemeProvider theme={theme}>
-          <Toolbar
-            sx={{
-              width: '60%',
-              height: '70vh',
-              margin: '0 auto',
-              display: 'flex',
-              flexDirection: 'column',
-              alignContent: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Box
-              style={{
-                // margin: '16px 0px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignContent: 'center',
-              }}
-              variant="outlined"
-            >
-              <Typography
-                variant="h2"
-                component="h3"
-                sx={{ textAlign: 'center', margin: '4% 0' }}
-              >
-                Sign in to see the posts of other users.
-              </Typography>
-              <Typography
-                variant="h5"
-                component="h3"
-                sx={{ textAlign: 'center', marginBottom: '4%' }}
-              >
-                Make sure to toggle Admin features to share your posts with the
-                community of bloggers!
-              </Typography>
-            </Box>
-            <Button
-              size="large"
-              variant="contained"
-              onClick={() => signIn({ redirect: '/api/auth/signin' })}
-            >
-              Sign in
-            </Button>
-          </Toolbar>
-        </ThemeProvider>
+        <Unauthorized/>
       )}
       {session && (
         <ThemeProvider theme={theme}>
@@ -150,7 +88,9 @@ export default function Posts({postUser, sessionUser }) {
                   : 'As a standard user your have the permission to view the posts of all other users'}
               </Typography>
               {sessionUser.admin ? (
-                <Button variant="contained" color="success"
+                <Button
+                  variant="contained"
+                  color="success"
                   onClick={() => handleSubmit()}
                 >
                   + Add New Post
@@ -208,17 +148,15 @@ export default function Posts({postUser, sessionUser }) {
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
-  console.log('session', session)
 
-
-
-
+  //get all posts from the database with the user information
   const postUser = await db
     .query(
       `SELECT "post".id as post_id, "post".date_created, "post".title, "post".views, "post".content, "user".name, "user".admin FROM "post" INNER JOIN "user" ON "post".user_id = "user".id`,
     )
     .then((results) => results.rows)
 
+    //get information of a logged in user
   if (session) {
     const sessionUser = await db
       .query(
@@ -228,7 +166,7 @@ export async function getServerSideProps(context) {
 
     return {
       props: {
-        session,
+        // session,
         postUser,
         sessionUser,
       },

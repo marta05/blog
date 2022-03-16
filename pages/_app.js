@@ -1,6 +1,6 @@
-export function reportWebVitals(metric) {
-  console.log(metric)
-}
+// export function reportWebVitals(metric) {
+//   console.log(metric)
+// }
 
 import Head from 'next/head';
 import { CacheProvider } from '@emotion/react';
