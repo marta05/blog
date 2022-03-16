@@ -5,25 +5,18 @@ import {
   CardHeader,
   Rating,
   Typography,
-} from "@mui/material";
-import { orange } from "@mui/material/colors";
+} from '@mui/material'
+import { orange } from '@mui/material/colors'
 
-const ReviewShanen = ({
-    initials,
-    title,
-    text,
-    value
-    }
-) => {
+const ReviewShanen = ({ initials, title, text, value }) => {
   return (
-    <Card sx={{ maxWidth: 345, minWidth: 300, marginTop: '2%', height:'240px' }}>
+    <Card
+      sx={{ maxWidth: 345, minWidth: 300, marginTop: '2%', height: '240px' }}
+    >
       <CardHeader
-      sx={{paddingBottom:'5px'}}
+        sx={{ paddingBottom: '5px' }}
         avatar={
-          <Avatar
-            sx={{ bgcolor: orange[500]}}
-            aria-label="profile letter"
-          >
+          <Avatar sx={{ bgcolor: orange[500] }} aria-label="profile letter">
             {initials}
           </Avatar>
         }
@@ -36,7 +29,7 @@ const ReviewShanen = ({
         </Typography>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default ReviewShanen;
+export default ReviewShanen

@@ -1,60 +1,75 @@
-import CardMedia from '@mui/material/CardMedia';
-import { blue } from "@mui/material/colors";
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import router from 'next/router';
+import { blue } from '@mui/material/colors'
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
+import router from 'next/router'
 
-import {Card, CardHeader, CardContent, CardActions, Avatar, 
-IconButton, Typography, Button } from '@mui/material';
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions,
+  Avatar,
+  IconButton,
+  Typography,
+  Button,
+} from '@mui/material'
 
-
-export default function Post({
-    title,
-    views,
-    userName,
-    dateCreated,
-    postId
-}) {
+export default function Post({verifiedSession, title, views, userName, dateCreated, postId }) {
   return (
-    <Card sx={{ minWidth:320, maxWidth: 345, minHeight: 220, marginBottom:'2%' }}>
-           <CardHeader
-      sx={{paddingBottom:'5px'}}
+    <Card
+      elevation={4}
+      sx={{ width: '340px', minHeight: 220, marginBottom: '2%' }}
+    >
+      <CardHeader
+        sx={{ paddingBottom: '5px' }}
         avatar={
-          <Avatar
-            sx={{ bgcolor: blue[500]}}
-            aria-label="profile letter"
-          >
-          {/* extract the first letter of user name */}
+          <Avatar sx={{ bgcolor: blue[500] }} aria-label="profile letter">
           </Avatar>
         }
         title={userName}
         subheader={dateCreated}
+        action={
+          verifiedSession ? 
+          <Button
+          variant='outlined'
+          onClick={() => router.push(`/posts/edit/${postId}`)}
+        >Edit</Button> : null
+          }
       />
-      {/* <CardMedia
-        component="img"
-        height="50"
-        image="/static/images/cards/paella.jpg"
-        alt="Paella dish"
-      /> */}
       <CardContent>
-        <Typography variant="body2" color="text.secondary" sx={{maxHeight:'60px', overflow: 'hidden', ":first-letter":{textTransform:'capitalize'} }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            maxHeight: '60px',
+            overflow: 'hidden',
+            ':first-letter': { textTransform: 'capitalize' },
+          }}
+        >
           {title}
         </Typography>
       </CardContent>
-      <CardActions disableSpacing sx={{display:'flex', justifyContent:'space-between' }}>
+      <CardActions
+        disableSpacing
+        sx={{ display: 'flex', justifyContent: 'space-between' }}
+      >
         <IconButton aria-label="see views">
-          <RemoveRedEyeIcon/>
-          <Typography variant="body2" color="text.secondary" sx={{paddingLeft:'10px'}}>
+          <RemoveRedEyeIcon />
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ paddingLeft: '10px' }}
+          >
             {views} Views
           </Typography>
         </IconButton>
         <Button
           onClick={() => {
-            router.push('/posts/[id]', `/posts/${postId}`);
+            router.push('/posts/[id]', `/posts/${postId}`)
           }}
         >
-            ...Read More
-          </Button>
+          ...Read More
+        </Button>
       </CardActions>
     </Card>
-  );
+  )
 }

@@ -1,7 +1,8 @@
 import NextAuth from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
-import axios from 'axios'
+
 import db from '../../../lib/db'
+const {verifyPassword} = require('../../../helpers/users')
 
 
 export default NextAuth({
@@ -16,17 +17,20 @@ export default NextAuth({
         },
         password: { label: "Password", type: "password" },
       },
-      authorize: async (credentials) => {
+      authorize: async (credentials, req) => {
         const dbEmail = credentials.email
+        // const plainPassword = credentials.password
 
         // the database lookup for the user
         const dbUser = await db.query(`SELECT * FROM "user" WHERE email = '${dbEmail}'`).then((results)=> results.rows[0])
 
         //verifying if the user exists and if the password input matches password from the db
-          if(dbUser.length === 0){
+          if(dbUser === undefined) {
            console.log("The user with the email doesn't exist")
+           return null
         } else if(
-          credentials.password === dbUser.hashed_password
+          //the output of verifyPassword is a boolean (true if the password matches, false if it doesn't)
+          await verifyPassword(credentials.password, dbUser.hashed_password)
          ) {
           return {
             id: dbUser.id,
@@ -39,12 +43,16 @@ export default NextAuth({
         }
       },
     }),
+    // GitHub({
+    //   clientId: process.env.GITHUB_CLIENT_ID,
+    //   clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    //   }),
   ],
   session: {
     jwt: true,
   },
   jwt: {
-    secret: "test",
+    secret: process.env.JWT_SECRET,
     encryption: true,
   },
   callbacks: {
@@ -61,7 +69,7 @@ export default NextAuth({
       return session;
     },
   },
-  // pages: {
-  //   signIn: "http://localhost:3000/signin",
-  // },
+  pages: {
+    signin: '/api/auth/signin'
+}
 });

@@ -1,3 +1,7 @@
+// export function reportWebVitals(metric) {
+//   console.log(metric)
+// }
+
 import Head from 'next/head';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider, CssBaseline, Toolbar } from '@mui/material';
@@ -13,8 +17,8 @@ import '../styles/globals.css';
 
 const clientSideEmotionCache = createEmotionCache();
 
-const MyApp = (props) => {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+export default function MyApp(props){
+  const {Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   return (
     <SessionProvider>
@@ -24,7 +28,8 @@ const MyApp = (props) => {
       </Head>
       <ThemeProvider theme={lightTheme}>
         <CssBaseline />
-        <Header />
+        <Header 
+        />
         <Toolbar>
           <Container
               maxWidth="lg"
@@ -39,5 +44,3 @@ const MyApp = (props) => {
     </SessionProvider>
   );
 };
-
-export default MyApp;

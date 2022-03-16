@@ -1,21 +1,21 @@
-import { getSession, signIn, signOut, useSession } from 'next-auth/react'
-import Review from '../components/Card/Review'
+import { getSession, signIn} from 'next-auth/react'
 import { Toolbar, Typography, ThemeProvider, Button } from '@mui/material'
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
-import Router from 'next/router'
 import {useState} from 'react'
+import Review from '../components/Card/Review'
 import Register from '../components/Registration/Registration'
-
 import Image from 'next/image'
 import Ninja from '../public/ninja1.png'
 
+
+
 export default function Home({ session }) {
 
+  //opens modal
   const [open, setOpen] = useState(false);
-  const handleOpen = () => {setOpen(true)}; //opens modal
+  const handleOpen = () => {setOpen(true)};
 
-  console.log(session)
-
+  //responsive font sizes
   let theme = createTheme()
   theme = responsiveFontSizes(theme)
 
@@ -119,7 +119,7 @@ export async function getServerSideProps(context) {
   
   return {
     props: {
-      session: session
+      session
     },
   }
 }
