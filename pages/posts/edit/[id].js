@@ -115,11 +115,11 @@ export default function Edit({ session, postId, singlePostUser }) {
               <Button
                 size="large"
                 variant="outlined"
-                color="primary"
-                sx={{ width: '120px' }}
-                onClick={() => handleDelete()}
+                color="error"
+                sx={{ marginRight: '2%', width: '120px' }}
+                onClick={() => handleSubmit()}
               >
-                CANCEL
+                DELETE
               </Button>
             </Box>
           </Box>
