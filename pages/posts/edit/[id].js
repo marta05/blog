@@ -31,6 +31,17 @@ export default function Edit({ session, postId, singlePostUser }) {
       })
   }
 
+  //delete post on click of cancel
+  const handleDelete = async () => {
+    await axios.delete(`/api/post`, {
+      data: {
+        postId: postId,
+      },
+    }).then(function (response) {
+      router.push('/posts')
+    })
+  }
+
   //update state with post data
   useEffect(() => {
     if (singlePostUser) {
@@ -106,7 +117,7 @@ export default function Edit({ session, postId, singlePostUser }) {
                 variant="outlined"
                 color="primary"
                 sx={{ width: '120px' }}
-                onClick={() => router.push('/posts')}
+                onClick={() => handleDelete()}
               >
                 CANCEL
               </Button>
