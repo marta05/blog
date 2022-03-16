@@ -6,5 +6,6 @@ module.exports = {
       DB_USER: '', //input your username
       DB_PASSWORD: '', //input your password
       DB_NAME:'', //input your database name
+      JWT_SECRET:'', //input your JWT secret
   },
 }
