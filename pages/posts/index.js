@@ -17,12 +17,11 @@ import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 import Post from '../../components/Card/Post'
 
 
-export default function Posts({ session, postUser, sessionUser }) {
+export default function Posts({postUser, sessionUser }) {
   const [visible, setVisible] = useState(3)
 
   console.log('posts and user name', postUser)
   console.log('sessionUser', sessionUser)
-  console.log('session', session)
 
   const dateFormatted = (date) => {
     const dateObj = new Date(date)
@@ -31,6 +30,11 @@ export default function Posts({ session, postUser, sessionUser }) {
     const year = dateObj.getUTCFullYear()
     return `${month}/${day}/${year}`
   }
+
+  const {data: session} = useSession()
+
+  console.log('session', session)
+
 
   // const handleClick = async () => {
   //   Router.push('/posts/edit')
@@ -205,6 +209,9 @@ export default function Posts({ session, postUser, sessionUser }) {
 export async function getServerSideProps(context) {
   const session = await getSession(context)
   console.log('session', session)
+
+
+
 
   const postUser = await db
     .query(

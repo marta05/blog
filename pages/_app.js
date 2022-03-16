@@ -1,3 +1,7 @@
+export function reportWebVitals(metric) {
+  console.log(metric)
+}
+
 import Head from 'next/head';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider, CssBaseline, Toolbar } from '@mui/material';

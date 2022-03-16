@@ -13,15 +13,23 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import router from 'next/router';
+import { signIn } from 'next-auth/react';
 
 const theme = createTheme();
 
 export default function SignIn() {
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
-  const handleSignIn = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    await router.push('/posts');
-  }
+    await signIn('CredentialProvider', {
+      callbackUrl: 'http://localhost:3000/posts',
+      email,
+      password,
+      });
+  };
+  
 
 
   return (
@@ -48,10 +56,13 @@ export default function SignIn() {
               required
               fullWidth
               id="email"
-              label="Email Address"
+              label="Email"
+              type="email"
               name="email"
               autoComplete="email"
               autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -62,13 +73,15 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Button
               // type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={handleSignIn}
+              onClick={handleSubmit}
             >
               Sign In
             </Button>

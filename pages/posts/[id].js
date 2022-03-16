@@ -5,6 +5,7 @@ import { signIn } from 'next-auth/react'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit';
 import Router from 'next/router'
+import { useEffect } from 'react'
 
 import { getSession } from 'next-auth/react'
 import db from '../../lib/db'
@@ -18,6 +19,7 @@ export default function PostId({ session, postId, singlePostUser }) {
     const year = dateObj.getUTCFullYear()
     return `${month}/${day}/${year}`
   }
+
 
   console.log(session)
 
@@ -46,22 +48,11 @@ export default function PostId({ session, postId, singlePostUser }) {
     }
   }
 
-  // const editPost = async () => {
-  //   try{
-  //     await axios.put(`/api/post`, {
-  //       data: { postId: postId }
-  //     })
-  //     Router.push('/posts/edit')
-  //   } catch(err) {
-  //     console.log(err)
-  //   }
-  // }
 
   const handleEdit = async () => {
     // await editPost()
     Router.push('/posts/edit/[id]', `/posts/edit/${postId}`)
   }
-    
 
   //in return below are covered 3 cases, 
   //when user is not logged in and there is no post in the database
@@ -275,6 +266,12 @@ export default function PostId({ session, postId, singlePostUser }) {
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req })
   const postId = context.query.id
+
+  const updateViews = await db.query(`
+    UPDATE "post"
+    SET views = views + 1
+    WHERE id = $1
+    `, [postId])
 
   //query to extract the post information and user information where the post Id is equal to the id in the url
   const singlePostUser = await db

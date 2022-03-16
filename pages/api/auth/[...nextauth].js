@@ -1,12 +1,8 @@
 import NextAuth from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
-import axios from 'axios'
+
 import db from '../../../lib/db'
-const {
-  hashPassword,
-  verifyPassword,
-  validateInput,
-} = require('../../../helpers/users')
+const {verifyPassword} = require('../../../helpers/users')
 
 
 export default NextAuth({
@@ -21,7 +17,7 @@ export default NextAuth({
         },
         password: { label: "Password", type: "password" },
       },
-      authorize: async (credentials) => {
+      authorize: async (credentials, req) => {
         const dbEmail = credentials.email
         // const plainPassword = credentials.password
 
@@ -47,12 +43,16 @@ export default NextAuth({
         }
       },
     }),
+    // GitHub({
+    //   clientId: process.env.GITHUB_CLIENT_ID,
+    //   clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    //   }),
   ],
   session: {
     jwt: true,
   },
   jwt: {
-    secret: "test",
+    secret: process.env.JWT_SECRET,
     encryption: true,
   },
   callbacks: {
@@ -69,7 +69,7 @@ export default NextAuth({
       return session;
     },
   },
-  // pages: {
-  //   signIn: "http://localhost:3000/signin",
-  // },
+  pages: {
+    signin: '/api/auth/signin'
+}
 });

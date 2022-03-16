@@ -33,7 +33,7 @@ export default function Edit({session, postId, singlePostUser}) {
             setContent(singlePostUser.content)
         }
     }, [singlePostUser])
-  
+
 
   return (
     <Toolbar sx={{marginTop:'3%'}}>
