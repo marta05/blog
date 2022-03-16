@@ -7,12 +7,8 @@ export default async function handler(req, res) {
     const { name, email, admin, password, confirmPassword } = req.body
 
     // validate the registration input
-    const error = validateInput(name, email, password, confirmPassword)
-    if (error) {
-      return res.status(400).json({
-        error: error.details[0].message,
-      })
-    }
+    const validationError = validateInput(name, email, password, confirmPassword)
+
     // hash the password
     const hashedPassword = await hashPassword(password)
 
@@ -21,11 +17,18 @@ export default async function handler(req, res) {
       .then((results) => results.rows[0])
 
     //verify if email is already taken
-    if (verifyEmail) {
-      return res.status(400).json({
-        error: 'Email already exists',
+    if (verifyEmail !== undefined) {
+      return res.json({
+        status: 'error',
+        message: 'email is already taken',
       })
-    } else {
+    } else if(validationError) {
+
+      return res.json({
+        status: 'error',
+        message: validationError.message,
+      })}
+       else {
       // insert the user into the database
       const user = await db
         .query(
@@ -35,10 +38,12 @@ export default async function handler(req, res) {
         )
         .then((results) => results.rows[0])
 
-      console.log('created user', user)
       // return the user
-      return await res.status(201).json({
-        user,
+      return res.status(201).json({
+        status: 'success',
+        data: {
+          user,
+        },
       })
     }
   }

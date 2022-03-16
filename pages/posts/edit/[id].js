@@ -27,7 +27,6 @@ export default function Edit({ session, postId, singlePostUser }) {
         postId: postId,
       })
       .then(function (response) {
-        console.log(response)
         router.push('/posts/[id]', `/posts/${response.data.id}`)
       })
   }

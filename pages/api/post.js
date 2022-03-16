@@ -7,7 +7,6 @@ export default async function handler(req, res) {
     const { title, content, userId, dateCreated } = req.body
 
     const session = await getSession({ req })
-    console.log('my console .log session', session)
 
     try {
       const response = await db
@@ -25,7 +24,6 @@ export default async function handler(req, res) {
             })
           }
         })
-      console.log(response)
 
       res.status(201).json(response)
     } catch (error) {
@@ -45,7 +43,6 @@ export default async function handler(req, res) {
           [title, content, postId],
         )
         .then((results) => results.rows[0])
-      console.log(response)
       res.status(200).json(response)
     } catch (error) {
       console.error(error)

@@ -51,30 +51,26 @@ export default function SignIn(props) {
   const { open, setOpen } = props
   const handleClose = () => setOpen(false)
 
+  //create user and display input validation error messages
   const handleSubmission = async () => {
-    await createUser()
-    await alert('User created!, please sign in on the next page')
-    await signIn('CredentialProvider', {
-      callbackUrl: 'http://localhost:3000/posts',
+     await axios.post('/api/auth/signup', {
+      admin: admin,
+      name: name,
+      email: email,
+      password: password,
+      confirmPassword: confirmPassword,
     })
-  }
-
-  const createUser = async () => {
-    try {
-      axios
-        .post('/api/auth/signup', {
-          admin: admin,
-          name: name,
-          email: email,
-          password: password,
-          confirmPassword: confirmPassword,
+    .then((response) => {
+      if(response.data.status === 'success') {
+        alert('User created!, please sign in on the next page')
+        signIn('CredentialProvider', {
+          callbackUrl: 'http://localhost:3000/posts',
         })
-        .then((response) => {
-          console.log(response)
-        })
-    } catch (err) {
-      console.log(err)
-    }
+      } else {
+        const error = response.data.message
+        alert(`${error}`)
+      }
+    })
   }
 
   return (
@@ -120,7 +116,6 @@ export default function SignIn(props) {
                         value={name}
                         onChange={(event) => {
                           setName(event.target.value)
-                          console.log(name)
                         }}
                         inputProps={{ maxLength: 12 }}
                       />
@@ -176,7 +171,7 @@ export default function SignIn(props) {
                         fullWidth
                         label="Confirm Password"
                         type={showPasswordConfirm ? 'text' : 'password'}
-                        id="confirmPassword"
+                        id="confirm password"
                         autoComplete="new-password"
                         value={confirmPassword}
                         onChange={(event) => {
@@ -265,4 +260,13 @@ export default function SignIn(props) {
       </Modal>
     </div>
   )
+}
+
+export async function getServerSideProps(context) {
+
+  return {
+    props: {
+      data,
+    },
+  }
 }
