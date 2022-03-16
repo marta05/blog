@@ -2,7 +2,7 @@ import { getSession } from 'next-auth/react'
 import db from '../../lib/db'
 import axios from 'axios'
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
-import {Box,Typography,IconButton,Button,ThemeProvider} from '@mui/material'
+import {Box,Typography,IconButton,Button,ThemeProvider, Toolbar} from '@mui/material'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
@@ -120,6 +120,7 @@ export default function PostId({ session, postId, singlePostUser }) {
           <Box
             sx={{
               display: 'flex',
+              width: '100%',
               justifyContent: 'space-between',
               alignContent: 'center',
               margin: '1% 0',
@@ -130,6 +131,7 @@ export default function PostId({ session, postId, singlePostUser }) {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'start',
+                justifyContent: 'center',
               }}
             >
               <Typography
@@ -145,13 +147,23 @@ export default function PostId({ session, postId, singlePostUser }) {
 
             {singlePostUser.user_id === session.user.id &&
               singlePostUser.admin && (
-                <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+                <Toolbar
+                  sx={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    // alignContent: 'end',
+                    alignItems: 'center',
+                    padding: '0px',
+
+                    justifyContent: 'center',
+                  }}
+                >
                   <Button
                     size="small"
                     variant="outlined"
                     color="primary"
                     onClick={() => handleEdit()}
-                    sx={{ minWidth: '150px', margin: '4px 10px 4px 0' }}
+                    sx={{ minWidth: '130px', height: '40px', marginLeft:'10px',}}
                     startIcon={<EditIcon />}
                   >
                     Edit Post
@@ -161,12 +173,12 @@ export default function PostId({ session, postId, singlePostUser }) {
                     variant="outlined"
                     color="error"
                     onClick={() => handleDelete()}
-                    sx={{ minWidth: '150px', margin: '4px 0 4px 0' }}
+                    sx={{ minWidth: '130px', marginLeft:'10px',  height: '40px'}}
                     startIcon={<DeleteIcon />}
                   >
                     Delete Post
                   </Button>
-                </Box>
+                </Toolbar>
               )}
           </Box>
           <Box
