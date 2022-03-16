@@ -36,8 +36,6 @@ export default function Posts({ postUser, sessionUser }) {
       })
   }
 
-  console.log(sessionUser)
-  console.log(postUser)
 
   const verifiedSession = (email) => {
     if(sessionUser.email === email) {
@@ -94,8 +92,8 @@ export default function Posts({ postUser, sessionUser }) {
                 }}
               >
                 {sessionUser.admin
-                  ? 'As an admin user you can view posts of all other users, as well as add, edit and delete your own posts'
-                  : 'As a standard user your have the permission to view the posts of all other users'}
+                  ? 'As an Admin User you can view posts of all other users, as well as add, edit and delete your own posts'
+                  : 'As a Standard User your have the permission to view the posts of all other users.  If you want to create and share your posts with others register as an Admin User.'}
               </Typography>
               {sessionUser.admin ? (
                 <Button

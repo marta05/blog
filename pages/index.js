@@ -1,19 +1,20 @@
-import { getSession, signIn} from 'next-auth/react'
+import { getSession, signIn } from 'next-auth/react'
 import { Toolbar, Typography, ThemeProvider, Button } from '@mui/material'
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
-import {useState} from 'react'
+import { useState } from 'react'
 import Review from '../components/Card/Review'
 import Register from '../components/Registration/Registration'
 import Image from 'next/image'
 import Ninja from '../public/ninja1.png'
-
+import router from 'next/router'
 
 
 export default function Home({ session }) {
-
   //opens modal
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => {setOpen(true)};
+  const [open, setOpen] = useState(false)
+  const handleOpen = () => {
+    setOpen(true)
+  }
 
   //responsive font sizes
   let theme = createTheme()
@@ -43,24 +44,53 @@ export default function Home({ session }) {
             Welcome to BlogoNinja!
           </Typography>
           <Image src={Ninja} alt="ninja" width="200" height="120" />
-          <Toolbar
-            sx={{ marginTop: '2%', width: '100%', justifyContent:'center'}}
-          >
-            <Button
-              variant="contained"
-              size="large"
-              onClick={() =>
-                 {signIn('CredentialProvider', {callbackUrl: 'http://localhost:3000/posts'} )}}
+          {!session && (
+            <Toolbar
+              sx={{ marginTop: '2%', width: '100%', justifyContent: 'center' }}
             >
-              Sign in
-            </Button>
-            <Typography variant="h5" sx={{paddingLeft: '2%', paddingRight: '2%'}}>
-            OR
-            </Typography>
-            <Button variant="contained" size="large" onClick={()=>{handleOpen()}}>
-              Register
-            </Button>
-          </Toolbar>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={() => {
+                  signIn('CredentialProvider', {
+                    callbackUrl: 'http://localhost:3000/posts',
+                  })
+                }}
+              >
+                Sign in
+              </Button>
+              <Typography
+                variant="h5"
+                sx={{ paddingLeft: '2%', paddingRight: '2%' }}
+              >
+                OR
+              </Typography>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={() => {
+                  handleOpen()
+                }}
+              >
+                Register
+              </Button>
+            </Toolbar>
+          )}
+          {session && (
+            <Toolbar
+              sx={{ marginTop: '2%', width: '100%', justifyContent: 'center' }}
+            >
+              <Button
+                variant="contained"
+                size="large"
+                onClick={() => {
+                  router.push('/posts')
+                }}
+              >
+                Posts Page
+              </Button>
+            </Toolbar>
+          )}
           <Typography
             variant="p"
             color="info.dark"
@@ -96,7 +126,7 @@ export default function Home({ session }) {
           initials={'AC'}
           title={'Andrea'}
           text={
-            'I was recommended to use this platform by a friend, after using it for almost a year I must say it covers all the functionality I look for in the blogging website. The only minus I would point out is lack of having it in App format to blog on the go'
+            'I was recommended to use this platform by a friend, after using it for almost a year I must say it covers all the functionality I look for in the blogging app. The only minus I would point out is the design of their login page but it is not a big issue overall.'
           }
           value={4}
         />
@@ -109,17 +139,17 @@ export default function Home({ session }) {
           value={4.5}
         />
       </Toolbar>
-      <Register open={open} setOpen={setOpen}/>
+      <Register open={open} setOpen={setOpen} />
     </div>
   )
 }
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req })
-  
+
   return {
     props: {
-      session
+      session,
     },
   }
 }

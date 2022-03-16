@@ -62,7 +62,7 @@ export default function SignIn(props) {
     })
     .then((response) => {
       if(response.data.status === 'success') {
-        alert('User created!, please sign in on the next page')
+        alert('Success! Press OK to be redirected to the login page')
         signIn('CredentialProvider', {
           callbackUrl: 'http://localhost:3000/posts',
         })
