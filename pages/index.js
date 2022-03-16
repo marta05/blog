@@ -53,7 +53,7 @@ export default function Home({ session }) {
                 size="large"
                 onClick={() => {
                   signIn('CredentialProvider', {
-                    callbackUrl: 'http://localhost:3000/posts',
+                    callbackUrl: '/posts',
                   })
                 }}
               >

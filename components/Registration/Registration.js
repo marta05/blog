@@ -64,7 +64,7 @@ export default function SignIn(props) {
       if(response.data.status === 'success') {
         alert('Success! Press OK to be redirected to the login page')
         signIn('CredentialProvider', {
-          callbackUrl: 'http://localhost:3000/posts',
+          callbackUrl: '/posts',
         })
       } else {
         const error = response.data.message

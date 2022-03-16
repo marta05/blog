@@ -33,7 +33,7 @@ export default function Header() {
               <MenuItem
                 onClick={() =>
                   signIn('CredentialProvider', {
-                    callbackUrl: 'http://localhost:3000/posts',
+                    callbackUrl: '/posts',
                   })
                 }
               >
@@ -62,7 +62,7 @@ export default function Header() {
               <MenuItem onClick={() => Router.push('/posts')}>HOME</MenuItem>
               <MenuItem
                 onClick={() =>
-                  signOut({ callbackUrl: 'http://localhost:3000/' })
+                  signOut({ callbackUrl: '/' })
                 }
               >
                 SIGN OUT
