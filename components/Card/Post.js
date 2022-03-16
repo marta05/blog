@@ -13,7 +13,7 @@ import {
   Button,
 } from '@mui/material'
 
-export default function Post({ title, views, userName, dateCreated, postId }) {
+export default function Post({verifiedSession, title, views, userName, dateCreated, postId }) {
   return (
     <Card
       elevation={4}
@@ -27,6 +27,13 @@ export default function Post({ title, views, userName, dateCreated, postId }) {
         }
         title={userName}
         subheader={dateCreated}
+        action={
+          verifiedSession ? 
+          <Button
+          variant='outlined'
+          onClick={() => router.push(`/posts/edit/${postId}`)}
+        >Edit</Button> : null
+          }
       />
       <CardContent>
         <Typography

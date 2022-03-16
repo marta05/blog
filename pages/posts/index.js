@@ -1,5 +1,4 @@
 import db from '../../lib/db'
-import Register from '../../components/Registration/Registration'
 import Post from '../../components/Card/Post'
 import axios from 'axios'
 import router from 'next/router'
@@ -20,7 +19,7 @@ export default function Posts({ postUser, sessionUser }) {
     const month = dateObj.getUTCMonth() + 1
     const day = dateObj.getUTCDate()
     const year = dateObj.getUTCFullYear()
-    return `${month}/${day}/${year}`
+    return `${day}/${month}/${year}`
   }
 
   //insert new post to the database with id, userId and dateCreated
@@ -37,6 +36,16 @@ export default function Posts({ postUser, sessionUser }) {
       })
   }
 
+  console.log(sessionUser)
+  console.log(postUser)
+
+  const verifiedSession = (email) => {
+    if(sessionUser.email === email) {
+      return true
+    }
+  }
+
+
   //activate responsive font sizes
   let theme = createTheme()
   theme = responsiveFontSizes(theme)
@@ -46,7 +55,8 @@ export default function Posts({ postUser, sessionUser }) {
       {!session && (
         <Unauthorized/>
       )}
-      {session && (
+      {session && sessionUser !== undefined
+      && (
         <ThemeProvider theme={theme}>
           <Toolbar
             sx={{
@@ -126,6 +136,7 @@ export default function Posts({ postUser, sessionUser }) {
                     views={post.views}
                     userName={post.name}
                     date={post.date}
+                    verifiedSession={verifiedSession(post.email)}
                   />
                 ))}
               </Toolbar>
@@ -152,7 +163,7 @@ export async function getServerSideProps(context) {
   //get all posts from the database with the user information
   const postUser = await db
     .query(
-      `SELECT "post".id as post_id, "post".date_created, "post".title, "post".views, "post".content, "user".name, "user".admin FROM "post" INNER JOIN "user" ON "post".user_id = "user".id`,
+      `SELECT "post".id as post_id, "post".date_created, "post".title, "post".views, "post".content, "user".name, "user".email, "user".admin FROM "post" INNER JOIN "user" ON "post".user_id = "user".id`,
     )
     .then((results) => results.rows)
 

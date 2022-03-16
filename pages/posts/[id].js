@@ -18,7 +18,7 @@ export default function PostId({ session, postId, singlePostUser }) {
     const month = dateObj.getUTCMonth() + 1
     const day = dateObj.getUTCDate()
     const year = dateObj.getUTCFullYear()
-    return `${month}/${day}/${year}`
+    return `${day}/${month}/${year}`
   }
 
   //activate responsive font sizes
