@@ -207,6 +207,7 @@ export default function PostId({ session, postId, singlePostUser }) {
                 textAlign: 'center',
                 color: 'text.secondary',
                 marginBottom: '2%',
+                wordBreak: 'break-word',
               }}
             >
               {singlePostUser.content}
