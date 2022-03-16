@@ -11,10 +11,10 @@ import { orange } from '@mui/material/colors'
 const ReviewShanen = ({ initials, title, text, value }) => {
   return (
     <Card
-      sx={{ maxWidth: 345, minWidth: 300, marginTop: '2%', height: '240px' }}
+      sx={{ width:'340px', minHeight:'250px', margin: '3% 0'}}
     >
       <CardHeader
-        sx={{ paddingBottom: '5px' }}
+        sx={{ paddingBottom: '5px'}}
         avatar={
           <Avatar sx={{ bgcolor: orange[500] }} aria-label="profile letter">
             {initials}

@@ -44,6 +44,7 @@ export default function Home({ session }) {
             Welcome to BlogoNinja!
           </Typography>
           <Image src={Ninja} alt="ninja" width="200" height="120" />
+          
           {!session && (
             <Toolbar
               sx={{ marginTop: '2%', width: '100%', justifyContent: 'center' }}
@@ -51,6 +52,7 @@ export default function Home({ session }) {
               <Button
                 variant="contained"
                 size="large"
+                sx={{maxHeight: '50px', minWidth:'80px', whiteSpace: 'nowrap'}}
                 onClick={() => {
                   signIn('CredentialProvider', {
                     callbackUrl: '/posts',
@@ -61,13 +63,14 @@ export default function Home({ session }) {
               </Button>
               <Typography
                 variant="h5"
-                sx={{ paddingLeft: '2%', paddingRight: '2%' }}
+                sx={{ paddingLeft: '2%',paddingRight: '2%' }}
               >
                 OR
               </Typography>
               <Button
                 variant="contained"
                 size="large"
+                sx={{minWidth:'80px'}}
                 onClick={() => {
                   handleOpen()
                 }}
@@ -106,6 +109,7 @@ export default function Home({ session }) {
           </Typography>
         </ThemeProvider>
       </Toolbar>
+      <ThemeProvider theme={theme}>
       <Toolbar
         sx={{
           display: `flex`,
@@ -121,6 +125,7 @@ export default function Home({ session }) {
             "One of the greates blogging apps I have found so far, can't stress enough how much I enjoy it's simplicity and design! The customer service is extremaly fast with responses and the extra feature to have an admin panel covers it all!"
           }
           value={5}
+
         />
         <Review
           initials={'AC'}
@@ -139,6 +144,7 @@ export default function Home({ session }) {
           value={4.5}
         />
       </Toolbar>
+      </ThemeProvider>
       <Register open={open} setOpen={setOpen} />
     </div>
   )

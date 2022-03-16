@@ -30,7 +30,8 @@ export default function Post({verifiedSession, title, views, userName, dateCreat
         action={
           verifiedSession ? 
           <Button
-          variant='outlined'
+          size="small"
+          color="error"
           onClick={() => router.push(`/posts/edit/${postId}`)}
         >Edit</Button> : null
           }
@@ -63,6 +64,7 @@ export default function Post({verifiedSession, title, views, userName, dateCreat
           </Typography>
         </IconButton>
         <Button
+          size='small'
           onClick={() => {
             router.push('/posts/[id]', `/posts/${postId}`)
           }}

@@ -69,7 +69,7 @@ export default function Posts({ postUser, sessionUser }) {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                padding: '15px',
+                padding: '20px',
                 margin: '1% 0',
                 width: '100%',
                 boxSizing: 'content-box',
